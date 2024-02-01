@@ -1,0 +1,20 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<div class="d-flex align-items-center" style="height: 96%;">
+    <div class="container">
+        <h2 class="text-center">{{title}}</h2>
+
+        <form action="" method="post">
+            {% csrf_token %}
+
+            {% block form %}
+            {{form.as_p}}
+            <button type="submit" class="btn btn-outline-success">Submit</button>
+            {% endblock %}
+        </form>
+    </div>
+</div>
+
+{% endblock %}

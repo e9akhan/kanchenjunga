@@ -1,0 +1,42 @@
+{% extends 'store/base2.html' %}
+
+{% block app_content %}
+
+<div class="row container-box p-2">
+    <div class="col-9">
+      <form action="">
+        <input type="text" class="form-control" placeholder="Search" name="search">
+      </form>
+    </div>
+  
+    <div class="col-3 position-relative">
+      <div class="position-absolute end-0">
+        <a href="{% url 'store:add-department' %}" class="btn btn-success add-button">Add Department</a>
+      </div>
+    </div>
+</div>
+
+<div class="container border border-secondary rounded" style="height: 80%;">
+    <table class="table text-center info-table">
+        <thead>
+            <th>Name</th>
+            <th></th>
+        </thead>
+
+        <tbody>
+            {% for department in departments %}
+                <tr>
+                    <td>{{department.name}}</td>
+                    <td class="text-end">
+                        <a href="{% url 'store:update-department' department.pk %}" class="btn btn-outline-success buttons">Edit</a>
+                        <a href = "{% url 'store:delete-department' department.pk %}" class="btn btn-outline-danger buttons">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    
+</div>
+
+{% endblock %}

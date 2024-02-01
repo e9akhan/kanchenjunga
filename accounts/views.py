@@ -26,6 +26,9 @@ class CreateUser(CreateView):
     permission_required = ['is_superuser']
 
     def form_invalid(self, form):
+        """
+            Invalid form.
+        """
         messages.info(self.request, form.errors)
         return super().form_invalid(form)
 
@@ -41,6 +44,9 @@ class UpdateUser(UpdateView):
     success_url = reverse_lazy('store:index')
 
     def get(self, request, *args, **kwargs):
+        """
+            Get method.
+        """
         try:
             self.get_object()
         except:
@@ -50,20 +56,32 @@ class UpdateUser(UpdateView):
         return super().get(request, *args, **kwargs)
 
     def form_invalid(self, form):
+        """
+            Invalid form.
+        """
         messages.info(self.request, form.errors)
         return super().form_invalid(form)
 
     def has_permission(self) -> bool:
+        """
+            Method to check permissions.
+        """
         return self.request.user.is_superuser or (self.get_object() == self.request.user)
 
 
 class DeleteUser(PermissionRequiredMixin, DeleteView):
+    """
+        Delete user.
+    """
     model = User
     template_name = ''
     success_url = ''
     context_object_name = 'user'
 
     def get(self, request, *args, **kwargs):
+        """
+            Get method.
+        """
         try:
             self.get_object()
         except:
@@ -73,10 +91,16 @@ class DeleteUser(PermissionRequiredMixin, DeleteView):
         return super().get(request, *args, **kwargs)
 
     def has_permission(self) -> bool:
+        """
+            Method to check permissions.
+        """
         return self.request.user.is_superuser or (self.get_object() == self.request.user)
     
 
 class ListUser(ListView):
+    """
+        List all users.
+    """
     model = User
     template_name = ''
     context_object_name = 'users'
