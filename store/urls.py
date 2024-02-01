@@ -3,13 +3,12 @@
 """
 
 from django.urls import path
-from store.views import (index, ListDepartment, CreateDepartment, UpdateDepartment, DeleteDepartment,
+from store.views import (ListDepartment, CreateDepartment, UpdateDepartment, DeleteDepartment,
                          ListEquipmentType, CreateEquipmentType, UpdateEquipmentType, DeleteEquipmentType)
 
 app_name = 'store'
 
 urlpatterns = [
-    path('store/', index, name='index'),
     path('departments/', ListDepartment.as_view(), name='departments'),
     path('add-department/', CreateDepartment.as_view(), name='add-department'),
     path('update-department/<int:pk>/', UpdateDepartment.as_view(), name='update-department'),

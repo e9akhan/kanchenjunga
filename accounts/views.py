@@ -113,4 +113,4 @@ class UserLoginView(LoginView):
     """
     template_name = 'accounts/user.html'
     form_class = LoginForm
-    success_url = reverse_lazy('store:index')
+    success_url = reverse_lazy('store:equipmet-types')
