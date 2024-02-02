@@ -1,0 +1,42 @@
+{% extends 'store/base2.html' %}
+
+{% block app_content %}
+
+<div class="p-2 container-box">
+    <div>
+        <form action="{% url 'store:search-equipment' %}">
+            <input type="text" class="form-control" placeholder="Search" name="search">
+        </form>
+    </div>
+</div>
+
+<div class="container border border-secondary rounded" style="height: 80%;">
+    <table class="table table-striped table-hover">
+        <thead>
+            <th>Label</th>
+            <th>Equipment Type</th>
+            <th>User</th>
+            <th>Department</th>
+            <th>Functional</th>
+            <th></th>
+        </thead>
+
+        <tbody>
+            {% for equipment in equipments %}
+                <tr>
+                    <td>{{equipment.label}}</td>
+                    <td>{{equipment.equipment_type}}</td>
+                    <td>{{equipment.user}}</td>
+                    <td>{{equipment.department}}</td>
+                    <td>{{equipment.functional}}</td>
+                    <td class="text-end">
+                        <a href="{% url 'store:update-equipment' equipment.pk %}" class="btn btn-outline-success buttons">Edit</a>
+                        <a href = "{% url 'store:delete-equipment' equipment.pk %}" class="btn btn-outline-danger buttons">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

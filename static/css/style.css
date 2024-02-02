@@ -1,0 +1,144 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+
+.tab{
+    color: white;
+}
+
+.tab:hover{
+    background-color: white;
+    color: #7952b3;
+}
+
+a:link{
+    text-decoration: none;
+}
+
+.container-box{
+    height: 10%;
+    width: 100%;
+}
+
+.side-bar{
+    height: 92%;
+}
+
+.functional-tabs{
+    display: none;
+}
+
+#desktop-mode{
+    width: 30%;
+}
+
+.bg-purple{
+    background-color: #7952b3;
+}
+
+@media only screen and (max-width: 1000px) and (min-width: 751px){
+    .buttons{
+        font-size: 0.7rem;
+        padding: 1px;
+        margin: 1px;
+    }
+
+    .info-table{
+        font-size: 0.7rem;
+    }
+
+    .add-button{
+        font-size: 1rem;
+        padding: 2px;
+    }
+}
+
+@media only screen and (max-width: 750px) and (min-width: 501px){
+
+    .functional-tabs{
+        display: block;
+    }
+
+    #desktop-mode{
+        display: none;
+    }
+
+    #content{
+        width: 100%;
+    }
+
+    .buttons{
+        font-size: 0.7rem;
+        padding: 0px;
+        margin: 1px;
+    }
+
+    .info-table{
+        font-size: 0.6rem;
+    }
+
+    .add-button{
+        font-size: 0.8rem;
+        padding: 1px;
+    }
+}
+
+@media only screen and (max-width: 500px) and (min-width: 301px){
+
+    #functional-tabs{
+        display: block;
+    }
+
+    #desktop-mode{
+        display: none;
+    }
+
+    #content{
+        width: 100%;
+    }
+
+    .buttons{
+        font-size: 0.5rem;
+        padding: 0px;
+        margin: 1px;
+    }
+
+    .info-table{
+        font-size: 0.5rem;
+    }
+
+    .add-button{
+        font-size: 0.8rem;
+        padding: 1px;
+    }
+}
+
+@media only screen and (max-width: 300px){
+    #functional-tabs{
+        display: block;
+    }
+
+    #desktop-mode{
+        display: none;
+    }
+
+    #content{
+        width: 100%;
+    }
+
+    .buttons{
+        font-size: 0.5rem;
+        padding: 0px;
+        margin: 1px;;
+    }
+
+    .info-table{
+        font-size: 0.5rem;
+    }
+
+    .add-button{
+        font-size: 0.8rem;
+        padding: 1px;
+    }
+}

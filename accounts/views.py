@@ -74,8 +74,8 @@ class DeleteUser(PermissionRequiredMixin, DeleteView):
         Delete user.
     """
     model = User
-    template_name = ''
-    success_url = ''
+    template_name = 'accounts/delete.html'
+    success_url = reverse_lazy('accounts:users')
     context_object_name = 'user'
 
     def get(self, request, *args, **kwargs):
@@ -96,15 +96,20 @@ class DeleteUser(PermissionRequiredMixin, DeleteView):
         """
         return self.request.user.is_superuser or (self.get_object() == self.request.user)
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Delete User'
+        return context
+    
 
 class ListUser(ListView):
     """
         List all users.
     """
     model = User
-    template_name = ''
+    template_name = 'accounts/list_user.html'
     context_object_name = 'users'
-    paginate_by = 8
+    paginate_by = 10
 
 
 class UserLoginView(LoginView):
