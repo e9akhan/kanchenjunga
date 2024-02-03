@@ -11,18 +11,19 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from accounts.forms import SignUpForm, LoginForm, UpdateUserForm
 
 # Create your views here.
 
-# @method_decorator(login_required(login_url= 'accounts:login'), name='dispatch')
-class CreateUser(CreateView):
+@method_decorator(login_required(login_url= 'accounts:login'), name='dispatch')
+class CreateUser(PermissionRequiredMixin, CreateView):
     """
         Create user.
     """
     template_name = 'accounts/user.html'
     form_class = SignUpForm
-    success_url = reverse_lazy('store:index')
+    success_url = reverse_lazy('accounts:users')
     permission_required = ['is_superuser']
 
     def form_invalid(self, form):
@@ -33,7 +34,8 @@ class CreateUser(CreateView):
         return super().form_invalid(form)
 
 
-class UpdateUser(UpdateView):
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+class UpdateUser(PermissionRequiredMixin, UpdateView):
     """
         Update user.
     """
@@ -41,7 +43,7 @@ class UpdateUser(UpdateView):
     form_class = UpdateUserForm
     template_name = 'accounts/user.html'
     context_object_name = 'user'
-    success_url = reverse_lazy('store:index')
+    success_url = reverse_lazy('accounts:users')
 
     def get(self, request, *args, **kwargs):
         """
@@ -69,6 +71,7 @@ class UpdateUser(UpdateView):
         return self.request.user.is_superuser or (self.get_object() == self.request.user)
 
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class DeleteUser(PermissionRequiredMixin, DeleteView):
     """
         Delete user.
@@ -86,7 +89,7 @@ class DeleteUser(PermissionRequiredMixin, DeleteView):
             self.get_object()
         except:
             messages.info(request, 'User doest not exists.')
-            return redirect('accounts:login')
+            return redirect('accounts:users')
 
         return super().get(request, *args, **kwargs)
 
@@ -102,6 +105,7 @@ class DeleteUser(PermissionRequiredMixin, DeleteView):
         return context
     
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class ListUser(ListView):
     """
         List all users.
@@ -116,6 +120,21 @@ class UserLoginView(LoginView):
     """
         Login View.
     """
-    template_name = 'accounts/user.html'
+    template_name = 'accounts/login.html'
     form_class = LoginForm
-    success_url = reverse_lazy('store:equipmet-types')
+    success_url = reverse_lazy('store:equipment-types')
+
+
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+class SearchUser(ListView):
+    model = User
+    template_name = 'accounts/list_user.html'
+    paginate_by = 8
+    context_object_name = 'users'
+
+    def get_queryset(self):
+        search = self.request.GET['search']
+        return self.model.filter(
+            Q(username__icontains = search) | Q(first_name__icontains = search) |
+            Q(last_name__icontains = search)
+        )

@@ -6,7 +6,7 @@ from django.urls import path
 from store.views import (ListDepartment, CreateDepartment, UpdateDepartment, DeleteDepartment,
                          ListEquipmentType, CreateEquipmentType, UpdateEquipmentType, DeleteEquipmentType,
                          ListEquipment, CreateEquipment, UpdateEquipment, DeleteEquipment, ListParticularEquipments,
-                         SearchDepartment, SearchEquipment, SearchEquipmentType)
+                         SearchDepartment, SearchEquipment, SearchEquipmentType, SearchAssignedEquipment, Alerts)
 
 app_name = 'store'
 
@@ -29,6 +29,9 @@ urlpatterns = [
     path('equipments/<str:equipment_type>/', ListParticularEquipments.as_view(), name='particular-equipments'),
 
     path('search-equipment/', SearchEquipment.as_view(), name='search-equipment'),
+    path('search-assigned-equipment/', SearchAssignedEquipment.as_view(), name='search-assigned-equipment'),
     path('search-department/', SearchDepartment.as_view(), name='search-department'),
-    path('search-equipment-type/', SearchEquipmentType.as_view(), name='search-equipment-type')
+    path('search-equipment-type/', SearchEquipmentType.as_view(), name='search-equipment-type'),
+
+    path('alerts/', Alerts.as_view(), name='alerts')
 ]

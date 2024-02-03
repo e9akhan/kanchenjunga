@@ -1,0 +1,12 @@
+{% extends 'store/base2.html' %}
+
+{% block app_content %}
+
+<div class="container border border-secondary rounded" style="height: 80%;">
+    {% for alert in alerts %}
+        <td>{{alert}}</td>
+        <td>{{alert.get_remaining_items}}</td>
+    {% endfor %}
+</div>
+
+{% endblock %}

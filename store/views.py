@@ -3,20 +3,24 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView
 from django.contrib import messages
 from django.db.models import Q
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 from store.models import Department, Equipment, EquipmentType
 from store.forms import EquipmentTypeForm, DepartmentForm, AddEquipmentForm, UpdateEquipmentForm
 
 # Create your views here.
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class ListDepartment(ListView):
     model = Department
     template_name = 'store/list_department.html'
-    paginate_by = 10
+    paginate_by = 8
     context_object_name = 'departments'
     
     def get_queryset(self):
         return self.model.objects.all()[::-1]
 
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class CreateDepartment(CreateView):
     model = Department
     template_name = 'store/form.html'
@@ -29,6 +33,7 @@ class CreateDepartment(CreateView):
         return context
 
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class UpdateDepartment(UpdateView):
     model = Department
     template_name = 'store/form.html'
@@ -50,6 +55,7 @@ class UpdateDepartment(UpdateView):
         return context
 
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class DeleteDepartment(DeleteView):
     model = Department
     template_name = 'store/delete.html'
@@ -71,13 +77,15 @@ class DeleteDepartment(DeleteView):
         return context
 
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class ListEquipmentType(ListView):
     model = EquipmentType
     template_name = 'store/list_equipment_type.html'
     context_object_name = 'equipment_types'
-    paginate_by = 10
+    paginate_by = 8
 
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class CreateEquipmentType(CreateView):
     model = EquipmentType
     template_name = 'store/form.html'
@@ -90,6 +98,7 @@ class CreateEquipmentType(CreateView):
         return context
 
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class UpdateEquipmentType(UpdateView):
     model = EquipmentType
     template_name = 'store/form.html'
@@ -111,6 +120,7 @@ class UpdateEquipmentType(UpdateView):
         return context
     
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class DeleteEquipmentType(DeleteView):
     model = EquipmentType
     template_name = 'store/delete.html'
@@ -132,19 +142,21 @@ class DeleteEquipmentType(DeleteView):
         return context
 
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class ListParticularEquipments(ListView):
     model = Equipment
     template_name = 'store/list_equipment.html'
-    paginate_by = 10
+    paginate_by = 8
     context_object_name = 'equipments'
 
     def get_queryset(self):
         return self.model.objects.filter(equipment_type__name = self.kwargs['equipment_type'], user=None)
 
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class ListEquipment(ListView):
     model = Equipment
-    template_name = 'store/list_equipment.html'
+    template_name = 'store/list_assigned_equipment.html'
     paginate_by = 10
     context_object_name = 'equipments'
 
@@ -152,11 +164,12 @@ class ListEquipment(ListView):
         return self.model.objects.exclude(user = None)
 
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class CreateEquipment(CreateView):
     model = Equipment
     form_class = AddEquipmentForm
     template_name = 'store/form.html'
-    success_url = reverse_lazy('store:equipments')
+    success_url = reverse_lazy('store:equipment-types')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -176,6 +189,7 @@ class CreateEquipment(CreateView):
         return super().form_valid(form)
     
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class UpdateEquipment(UpdateView):
     model = Equipment
     template_name = 'store/form.html'
@@ -188,6 +202,7 @@ class UpdateEquipment(UpdateView):
         return context
 
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class DeleteEquipment(DeleteView):
     model = Equipment
     template_name = 'store/delete.html'
@@ -199,31 +214,50 @@ class DeleteEquipment(DeleteView):
         return context
 
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class SearchEquipmentType(ListView):
     model = EquipmentType
     template_name = 'store/list_equipment_type.html'
     context_object_name = 'equipment_types'
-    paginate_by = 10
+    paginate_by = 8
 
     def get_queryset(self):
         return self.model.objects.filter(name__icontains = self.request.GET['search'])
 
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class SearchDepartment(ListView):
     model = Department
     template_name = 'store/list_department.html'
     context_object_name = 'departments'
-    paginate_by = 10
+    paginate_by = 8
 
     def get_queryset(self):
         return self.model.objects.filter(name__icontains = self.request.GET['search'])
 
 
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
 class SearchEquipment(ListView):
     model = Equipment
     template_name = 'store/list_equipment.html'
     context_object_name = 'equipments'
-    paginate_by = 10
+    paginate_by = 8
+
+    def get_queryset(self):
+        search = self.request.GET['search']
+        return self.model.objects.filter(
+            Q(label__icontains = search) | Q(department__name__icontains = search) |
+            Q(equipment_type__name__icontains = search) |
+            Q(functional__icontains = search), user = None
+        )[::-1]
+
+
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+class SearchAssignedEquipment(ListView):
+    model = Equipment
+    template_name = 'store/list_assigned_equipment.html'
+    context_object_name = 'equipments'
+    paginate_by = 8
 
     def get_queryset(self):
         search = self.request.GET['search']
@@ -231,4 +265,19 @@ class SearchEquipment(ListView):
             Q(label__icontains = search) | Q(department__name__icontains = search) |
             Q(equipment_type__name__icontains = search) |
             Q(functional__icontains = search)
-        )[::-1]
+        ).exclude(user = None)[::-1]
+
+
+@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+class Alerts(ListView):
+    model = EquipmentType
+    template_name = 'store/alerts.html'
+    context_object_name = 'alerts'
+    paginate_by = 8
+
+    def get_queryset(self):
+        return [
+            equipment_type
+            for equipment_type in self.model.objects.all()
+            if equipment_type.get_remaining_equipments <= 5
+        ]

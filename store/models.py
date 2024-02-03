@@ -75,6 +75,16 @@ class EquipmentType(models.Model):
             )
 
         cls.objects.bulk_create(equipment_type_list)
+
+    def save(self, **kwargs):
+        equipment_list = []
+        print(self.equipment.all())
+        for equipment in self.equipment.all():
+            equipment.label = self.name[:3] + equipment.label[3:]
+            equipment_list.append(equipment)
+        
+        Equipment.objects.bulk_update(equipment_list, ['label'])
+        return super().save(**kwargs)
     
     def __str__(self):
         return self.name
@@ -92,7 +102,11 @@ class Equipment(models.Model):
 
     @property
     def set_label(self):
-        count = self.equipment_type.equipment.count() + 1
+        try:
+            id = list(self.equipment_type.equipment.all())[-1]
+            count = int(id.label[6:]) + 1
+        except IndexError:
+            count = 1
         return f'{self.equipment_type.name[:3]} - {count:0>6}'
     
     @classmethod

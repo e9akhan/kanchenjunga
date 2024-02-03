@@ -1,0 +1,9 @@
+{% extends 'store/list_equipment.html' %}
+
+{% block search_form %}
+
+<form action="{% url 'store:search-assigned-equipment' %}">
+    <input type="text" class="form-control" placeholder="Search" name="search">
+</form>
+
+{% endblock %}

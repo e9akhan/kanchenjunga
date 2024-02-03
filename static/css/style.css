@@ -39,7 +39,7 @@ a:link{
 
 @media only screen and (max-width: 1000px) and (min-width: 751px){
     .buttons{
-        font-size: 0.7rem;
+        font-size: 0.9rem;
         padding: 1px;
         margin: 1px;
     }
@@ -69,8 +69,8 @@ a:link{
     }
 
     .buttons{
-        font-size: 0.7rem;
-        padding: 0px;
+        font-size: 0.8rem;
+        padding: 1px;
         margin: 1px;
     }
 
@@ -79,12 +79,12 @@ a:link{
     }
 
     .add-button{
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         padding: 1px;
     }
 }
 
-@media only screen and (max-width: 500px) and (min-width: 301px){
+@media only screen and (max-width: 500px) and (min-width: 401px){
 
     #functional-tabs{
         display: block;
@@ -99,17 +99,47 @@ a:link{
     }
 
     .buttons{
-        font-size: 0.5rem;
-        padding: 0px;
+        font-size: 0.7rem;
+        padding: 2px;
         margin: 1px;
     }
 
     .info-table{
-        font-size: 0.5rem;
+        font-size: 0.7rem;
     }
 
     .add-button{
-        font-size: 0.8rem;
+        font-size: 0.7rem;
+        padding: 1px;
+    }
+}
+
+@media only screen and (max-width: 400px) and (min-width: 301px){
+
+    #functional-tabs{
+        display: block;
+    }
+
+    #desktop-mode{
+        display: none;
+    }
+
+    #content{
+        width: 100%;
+    }
+
+    .buttons{
+        font-size: 0.6rem;
+        padding: 1px;
+        margin: 1px;
+    }
+
+    .info-table{
+        font-size: 0.6rem;
+    }
+
+    .add-button{
+        font-size: 0.7rem;
         padding: 1px;
     }
 }
