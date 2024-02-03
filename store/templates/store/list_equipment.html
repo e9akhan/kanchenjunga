@@ -2,14 +2,12 @@
 
 {% block app_content %}
 
-<div class="p-2 container-box">
-    <div>
-        {% block search_form %}
+<div class="row container-box p-2">
+    {% block search_form %}
         <form action="{% url 'store:search-equipment' %}">
-            <input type="text" class="form-control" placeholder="Search" name="search">
+        <input type="text" class="form-control" placeholder="Search" name="search">
         </form>
-        {% endblock %}
-    </div>
+    {% endblock %}
 </div>
 
 <div class="container border border-secondary rounded" style="height: 80%;">

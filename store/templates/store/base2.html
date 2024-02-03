@@ -21,9 +21,7 @@
                         </a>
                     </li>
                 {% endif %}
-                {% for page in page_obj.paginator.page_range %}
-                    <li class="page-item"><a class="page-link" href="?page={{forloop.counter}}">{{forloop.counter}}</a></li>
-                {% endfor %}
+                <li class="page-item page-link">{{page_obj.number}}</li>
                 {% if page_obj.has_next %}
                     <li class="page-item">
                         <a class="page-link" href="?page={{page_obj.next_page_number}}" aria-label="Next">
@@ -51,9 +49,7 @@
                         </a>
                     </li>
                 {% endif %}
-                {% for page in page_obj.paginator.page_range %}
-                    <li class="page-item"><a class="page-link" href="?search={{search}}&page={{forloop.counter}}">{{forloop.counter}}</a></li>
-                {% endfor %}
+                <li class="page-item page-link">{{page_obj.number}}</li>
                 {% if page_obj.has_next %}
                     <li class="page-item">
                         <a class="page-link" href="?search={{search}}&page={{page_obj.next_page_number}}" aria-label="Next">
