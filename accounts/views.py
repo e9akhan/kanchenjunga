@@ -54,7 +54,7 @@ class UpdateUser(PermissionRequiredMixin, UpdateView):
         """
         try:
             self.get_object()
-        except:
+        except self.model.DoesNotExist:
             messages.info(request, "User doest not exists.")
             return redirect("accounts:login")
 
@@ -93,7 +93,7 @@ class DeleteUser(PermissionRequiredMixin, DeleteView):
         """
         try:
             self.get_object()
-        except:
+        except self.model.DoesNotExist:
             messages.info(request, "User doest not exists.")
             return redirect("accounts:users")
 
@@ -154,7 +154,7 @@ class SearchUser(ListView):
         Overriding get queryset.
         """
         search = self.request.GET["search"]
-        return self.model.filter(
+        return self.model.objects.filter(
             Q(username__icontains=search)
             | Q(first_name__icontains=search)
             | Q(last_name__icontains=search)

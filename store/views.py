@@ -74,7 +74,7 @@ class UpdateDepartment(UpdateView):
         """
         try:
             self.get_object()
-        except:
+        except self.model.DoesNotExist:
             messages.info(request, "Department does not exists.")
             return redirect("store:departments")
 
@@ -106,7 +106,7 @@ class DeleteDepartment(DeleteView):
         """
         try:
             self.get_object()
-        except:
+        except self.model.DoesNotExist:
             messages.info(request, "Department does not exists.")
             return redirect("store:departments")
 
@@ -170,7 +170,7 @@ class UpdateEquipmentType(UpdateView):
         """
         try:
             self.get_object()
-        except:
+        except self.model.DoesNotExist:
             messages.info(request, "Equipment type does not exists.")
             return redirect("store:equipment-types")
 
@@ -202,7 +202,7 @@ class DeleteEquipmentType(DeleteView):
         """
         try:
             self.get_object()
-        except:
+        except self.model.DoesNotExist:
             messages.info(request, "Equipment type does not exists.")
             return redirect("store:equipment-types")
 
