@@ -10,395 +10,422 @@ from django.db.models import Q
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from store.models import Department, Equipment, EquipmentType
-from store.forms import EquipmentTypeForm, DepartmentForm, AddEquipmentForm, UpdateEquipmentForm
+from store.forms import (
+    EquipmentTypeForm,
+    DepartmentForm,
+    AddEquipmentForm,
+    UpdateEquipmentForm,
+)
+
 
 # Create your views here.
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class ListDepartment(ListView):
     """
-        List departments.
+    List departments.
     """
+
     model = Department
-    template_name = 'store/list_department.html'
+    template_name = "store/list_department.html"
     paginate_by = 8
-    context_object_name = 'departments'
-    
+    context_object_name = "departments"
+
     def get_queryset(self):
         """
-            Get queryset method.
+        Get queryset method.
         """
         return self.model.objects.all()[::-1]
 
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class CreateDepartment(CreateView):
     """
-        Create department.
+    Create department.
     """
+
     model = Department
-    template_name = 'store/form.html'
+    template_name = "store/form.html"
     form_class = DepartmentForm
-    success_url = reverse_lazy('store:departments')
+    success_url = reverse_lazy("store:departments")
 
     def get_context_data(self, **kwargs):
         """
-            Overridden get context data method.
+        Overridden get context data method.
         """
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Add Department'
+        context["title"] = "Add Department"
         return context
 
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class UpdateDepartment(UpdateView):
     """
-        Update department.
+    Update department.
     """
+
     model = Department
-    template_name = 'store/form.html'
+    template_name = "store/form.html"
     form_class = DepartmentForm
-    success_url = reverse_lazy('store:departments')
+    success_url = reverse_lazy("store:departments")
 
     def get(self, request, *args, **kwargs):
         """
-            Overridden get method.
+        Overridden get method.
         """
         try:
             self.get_object()
         except:
-            messages.info(request, 'Department does not exists.')
-            return redirect('store:departments')
-        
+            messages.info(request, "Department does not exists.")
+            return redirect("store:departments")
+
         return super().get(request, *args, **kwargs)
-        
+
     def get_context_data(self, **kwargs):
         """
-            Overridden get context data method.
+        Overridden get context data method.
         """
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Update Department'
+        context["title"] = "Update Department"
         return context
 
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class DeleteDepartment(DeleteView):
     """
-        Delete department.
+    Delete department.
     """
+
     model = Department
-    template_name = 'store/delete.html'
-    context_object_name = 'item'
-    success_url = reverse_lazy('store:departments')
+    template_name = "store/delete.html"
+    context_object_name = "item"
+    success_url = reverse_lazy("store:departments")
 
     def get(self, request, *args, **kwargs):
         """
-            Overridden get method.
+        Overridden get method.
         """
         try:
             self.get_object()
         except:
-            messages.info(request, 'Department does not exists.')
-            return redirect('store:departments')
+            messages.info(request, "Department does not exists.")
+            return redirect("store:departments")
 
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """
-            Overridden get context data.
+        Overridden get context data.
         """
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Delete Department'
+        context["title"] = "Delete Department"
         return context
 
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class ListEquipmentType(ListView):
     """
-        List equipment types.
+    List equipment types.
     """
+
     model = EquipmentType
-    template_name = 'store/list_equipment_type.html'
-    context_object_name = 'equipment_types'
+    template_name = "store/list_equipment_type.html"
+    context_object_name = "equipment_types"
     paginate_by = 8
 
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class CreateEquipmentType(CreateView):
     """
-        Create equipment type.
+    Create equipment type.
     """
+
     model = EquipmentType
-    template_name = 'store/form.html'
+    template_name = "store/form.html"
     form_class = EquipmentTypeForm
-    success_url = reverse_lazy('store:equipment-types')
+    success_url = reverse_lazy("store:equipment-types")
 
     def get_context_data(self, **kwargs):
         """
-            Overridden get context data.
+        Overridden get context data.
         """
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Add Equipment Type'
+        context["title"] = "Add Equipment Type"
         return context
 
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class UpdateEquipmentType(UpdateView):
     """
-        Update equipment type.
+    Update equipment type.
     """
+
     model = EquipmentType
-    template_name = 'store/form.html'
+    template_name = "store/form.html"
     form_class = EquipmentTypeForm
-    success_url = reverse_lazy('store:equipment-types')
-    
+    success_url = reverse_lazy("store:equipment-types")
+
     def get(self, request, *args, **kwargs):
         """
-            Overridden get method.
+        Overridden get method.
         """
         try:
             self.get_object()
         except:
-            messages.info(request, 'Equipment type does not exists.')
-            return redirect('store:equipment-types')
+            messages.info(request, "Equipment type does not exists.")
+            return redirect("store:equipment-types")
 
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """
-            Overridden get context data.
+        Overridden get context data.
         """
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Update Equipment Type'
+        context["title"] = "Update Equipment Type"
         return context
-    
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class DeleteEquipmentType(DeleteView):
     """
-        Delete equipment type.
+    Delete equipment type.
     """
+
     model = EquipmentType
-    template_name = 'store/delete.html'
-    success_url = reverse_lazy('store:equipment-types')
-    context_object_name = 'item'
+    template_name = "store/delete.html"
+    success_url = reverse_lazy("store:equipment-types")
+    context_object_name = "item"
 
     def get(self, request, *args, **kwargs):
         """
-            Overridden get method.
+        Overridden get method.
         """
         try:
             self.get_object()
         except:
-            messages.info(request, 'Equipment type does not exists.')
-            return redirect('store:equipment-types')
+            messages.info(request, "Equipment type does not exists.")
+            return redirect("store:equipment-types")
 
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """
-            Overriden get context data.
+        Overriden get context data.
         """
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Delete Equipment Type'
+        context["title"] = "Delete Equipment Type"
         return context
 
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class ListParticularEquipments(ListView):
     """
-        List particular equipments.
+    List particular equipments.
     """
+
     model = Equipment
-    template_name = 'store/list_equipment.html'
+    template_name = "store/list_equipment.html"
     paginate_by = 8
-    context_object_name = 'equipments'
+    context_object_name = "equipments"
 
     def get_queryset(self):
         """
-            Overridden get queryset method.
+        Overridden get queryset method.
         """
-        return self.model.objects.filter(equipment_type__name = self.kwargs['equipment_type'], user=None)
+        return self.model.objects.filter(
+            equipment_type__name=self.kwargs["equipment_type"], user=None
+        )
 
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class ListEquipment(ListView):
     """
-        List equipment.
+    List equipment.
     """
+
     model = Equipment
-    template_name = 'store/list_assigned_equipment.html'
+    template_name = "store/list_assigned_equipment.html"
     paginate_by = 10
-    context_object_name = 'equipments'
+    context_object_name = "equipments"
 
     def get_queryset(self):
         """
-            Overridden get queryset method.
+        Overridden get queryset method.
         """
-        return self.model.objects.exclude(user = None)[::-1]
+        return self.model.objects.exclude(user=None)[::-1]
 
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class CreateEquipment(CreateView):
     """
-        Create equipment.
+    Create equipment.
     """
+
     model = Equipment
     form_class = AddEquipmentForm
-    template_name = 'store/form.html'
-    success_url = reverse_lazy('store:equipment-types')
+    template_name = "store/form.html"
+    success_url = reverse_lazy("store:equipment-types")
 
     def get_context_data(self, **kwargs):
         """
-            Overridden get context data method.
+        Overridden get context data method.
         """
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Add Equipment'
+        context["title"] = "Add Equipment"
         return context
-    
+
     def form_valid(self, form):
         """
-            Overridden form valid method.
+        Overridden form valid method.
         """
-        quantity = form.cleaned_data['quantity']
+        quantity = form.cleaned_data["quantity"]
 
-        for _ in range(quantity-1):
-            instance = self.model(
-                equipment_type = form.cleaned_data['equipment_type']
-            )
+        for _ in range(quantity - 1):
+            instance = self.model(equipment_type=form.cleaned_data["equipment_type"])
             instance.label = instance.set_label
             instance.save()
 
         return super().form_valid(form)
-    
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class UpdateEquipment(UpdateView):
     """
-        Update equipment.
+    Update equipment.
     """
+
     model = Equipment
-    template_name = 'store/form.html'
+    template_name = "store/form.html"
     form_class = UpdateEquipmentForm
-    success_url = reverse_lazy('store:equipments')
+    success_url = reverse_lazy("store:equipments")
 
     def get_context_data(self, **kwargs):
         """
-            Overridden get context data.
+        Overridden get context data.
         """
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Update Equipment'
+        context["title"] = "Update Equipment"
         return context
 
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class DeleteEquipment(DeleteView):
     """
-        Delete equipment.
+    Delete equipment.
     """
+
     model = Equipment
-    template_name = 'store/delete.html'
-    success_url = reverse_lazy('store:equipments')
+    template_name = "store/delete.html"
+    success_url = reverse_lazy("store:equipments")
 
     def get_context_data(self, **kwargs):
         """
-            Overridden get context data.
+        Overridden get context data.
         """
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Delete Equipment'
+        context["title"] = "Delete Equipment"
         return context
 
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class SearchEquipmentType(ListView):
     """
-        Search equipment type.
+    Search equipment type.
     """
+
     model = EquipmentType
-    template_name = 'store/list_equipment_type.html'
-    context_object_name = 'equipment_types'
+    template_name = "store/list_equipment_type.html"
+    context_object_name = "equipment_types"
     paginate_by = 8
 
     def get_queryset(self):
         """
-            Overridden get queryset method.
+        Overridden get queryset method.
         """
-        return self.model.objects.filter(name__icontains = self.request.GET['search'])
+        return self.model.objects.filter(name__icontains=self.request.GET["search"])
 
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class SearchDepartment(ListView):
     """
-        Search Department.
+    Search Department.
     """
+
     model = Department
-    template_name = 'store/list_department.html'
-    context_object_name = 'departments'
+    template_name = "store/list_department.html"
+    context_object_name = "departments"
     paginate_by = 8
 
     def get_queryset(self):
         """
-            Overridden get queryset method.
+        Overridden get queryset method.
         """
-        return self.model.objects.filter(name__icontains = self.request.GET['search'])
+        return self.model.objects.filter(name__icontains=self.request.GET["search"])
 
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class SearchEquipment(ListView):
     """
-        Search equipment.
+    Search equipment.
     """
+
     model = Equipment
-    template_name = 'store/list_equipment.html'
-    context_object_name = 'equipments'
+    template_name = "store/list_equipment.html"
+    context_object_name = "equipments"
     paginate_by = 8
 
     def get_queryset(self):
         """
-            Overridden get queryset method.
+        Overridden get queryset method.
         """
-        search = self.request.GET['search']
+        search = self.request.GET["search"]
         return self.model.objects.filter(
-            Q(label__icontains = search) | Q(department__name__icontains = search) |
-            Q(equipment_type__name__icontains = search) |
-            Q(functional = search), user = None
+            Q(label__icontains=search)
+            | Q(department__name__icontains=search)
+            | Q(equipment_type__name__icontains=search)
+            | Q(functional__icontains=search),
+            user=None,
         )[::-1]
 
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class SearchAssignedEquipment(ListView):
     """
-        Search assigned equipment.
+    Search assigned equipment.
     """
+
     model = Equipment
-    template_name = 'store/list_assigned_equipment.html'
-    context_object_name = 'equipments'
+    template_name = "store/list_assigned_equipment.html"
+    context_object_name = "equipments"
     paginate_by = 8
 
     def get_queryset(self):
         """
-            Overridden get queryset method.
+        Overridden get queryset method.
         """
-        search = self.request.GET['search']
+        search = self.request.GET["search"]
         return self.model.objects.filter(
-            Q(label__icontains = search) | Q(department__name__icontains = search) |
-            Q(equipment_type__name__icontains = search) |
-            Q(functional__icontains = search)
-        ).exclude(user = None)[::-1]
+            Q(label__icontains=search)
+            | Q(department__name__icontains=search)
+            | Q(equipment_type__name__icontains=search)
+            | Q(functional__icontains=search)
+        ).exclude(user=None)[::-1]
 
 
-@method_decorator(login_required(login_url='accounts:login'), name='dispatch')
+@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class Alerts(ListView):
     """
-        Alert.
+    Alert.
     """
+
     model = EquipmentType
-    template_name = 'store/alerts.html'
-    context_object_name = 'alerts'
+    template_name = "store/alerts.html"
+    context_object_name = "alerts"
     paginate_by = 8
 
     def get_queryset(self):
         """
-            Overridden get queryset method.
+        Overridden get queryset method.
         """
         return [
             equipment_type

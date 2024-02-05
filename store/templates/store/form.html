@@ -10,8 +10,10 @@
             {% csrf_token %}
 
             {% block form %}
+
             {{form.as_p}}
             <button type="submit" class="btn btn-outline-success">Submit</button>
+            
             {% endblock %}
         </form>
     </div>

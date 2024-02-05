@@ -9,56 +9,58 @@ from store.models import Department, Equipment, EquipmentType
 
 class DepartmentForm(forms.ModelForm):
     """
-        Form for department.
+    Form for department.
     """
 
     class Meta:
         """
-            Meta class for department form.
+        Meta class for department form.
         """
 
         model = Department
-        fields = ('name',)
+        fields = ("name",)
 
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'})
-        }
+        widgets = {"name": forms.TextInput(attrs={"class": "form-control"})}
 
 
 class EquipmentTypeForm(forms.ModelForm):
     """
-        Form for equipment type.
+    Form for equipment type.
     """
 
     class Meta:
         """
-            Meta class for equipment type form.
+        Meta class for equipment type form.
         """
 
         model = EquipmentType
-        fields = ('name',)
+        fields = ("name",)
 
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'})
-        }
+        widgets = {"name": forms.TextInput(attrs={"class": "form-control"})}
 
 
 class AddEquipmentForm(forms.ModelForm):
     """
-        Form for equipment
+    Form for equipment
     """
 
-    equipment_type = forms.ModelChoiceField(queryset=EquipmentType.objects.all(), empty_label='Add Equipment Type')
+    equipment_type = forms.ModelChoiceField(
+        queryset=EquipmentType.objects.all(), empty_label="Add Equipment Type"
+    )
     quantity = forms.IntegerField()
 
-    equipment_type.widget.attrs.update({'class': 'form-select'})
-    quantity.widget.attrs.update({'class': 'form-control', 'placeholder': 0})
+    equipment_type.widget.attrs.update({"class": "form-select"})
+    quantity.widget.attrs.update({"class": "form-control", "placeholder": 0})
 
     class Meta:
-        model = Equipment
-        fields = ('equipment_type',)
+        """
+        Meta class.
+        """
 
-    def save(self, commit = True):
+        model = Equipment
+        fields = ("equipment_type",)
+
+    def save(self, commit=True):
         instance = super().save(commit=False)
         instance.label = instance.set_label
 
@@ -69,23 +71,31 @@ class AddEquipmentForm(forms.ModelForm):
 
 class UpdateEquipmentForm(forms.ModelForm):
     """
-        Update form for equipment.
+    Update form for equipment.
     """
 
     class Meta:
         """
-            Meta class for update equipment form.
+        Meta class for update equipment form.
         """
 
         model = Equipment
-        fields = ('label', 'user', 'department', 'functional')
+        fields = ("label", "user", "department", "functional")
 
         widgets = {
-            'label': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}),
+            "label": forms.TextInput(
+                attrs={"class": "form-control", "readonly": "True"}
+            ),
         }
-    
-    user = forms.ModelChoiceField(queryset=User.objects.all(), empty_label='Choose User', required=False)
-    department = forms.ModelChoiceField(queryset=Department.objects.all(), empty_label='Choose Department', required=False)
 
-    user.widget.attrs.update({'class': 'form-select'})
-    department.widget.attrs.update({'class': 'form-select'})
+    user = forms.ModelChoiceField(
+        queryset=User.objects.all(), empty_label="Choose User", required=False
+    )
+    department = forms.ModelChoiceField(
+        queryset=Department.objects.all(),
+        empty_label="Choose Department",
+        required=False,
+    )
+
+    user.widget.attrs.update({"class": "form-select"})
+    department.widget.attrs.update({"class": "form-select"})
