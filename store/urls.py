@@ -44,7 +44,7 @@ urlpatterns = [
         "add-equipment-type/", CreateEquipmentType.as_view(), name="add-equipment-type"
     ),
     path(
-        "update_equipment-type/<int:pk>/",
+        "update-equipment-type/<int:pk>/",
         UpdateEquipmentType.as_view(),
         name="update-equipment-type",
     ),

@@ -74,7 +74,7 @@ class UpdateDepartment(UpdateView):
         """
         try:
             self.get_object()
-        except self.model.DoesNotExist:
+        except Exception:
             messages.info(request, "Department does not exists.")
             return redirect("store:departments")
 
@@ -106,7 +106,7 @@ class DeleteDepartment(DeleteView):
         """
         try:
             self.get_object()
-        except self.model.DoesNotExist:
+        except Exception:
             messages.info(request, "Department does not exists.")
             return redirect("store:departments")
 
@@ -170,7 +170,7 @@ class UpdateEquipmentType(UpdateView):
         """
         try:
             self.get_object()
-        except self.model.DoesNotExist:
+        except Exception:
             messages.info(request, "Equipment type does not exists.")
             return redirect("store:equipment-types")
 
@@ -202,7 +202,7 @@ class DeleteEquipmentType(DeleteView):
         """
         try:
             self.get_object()
-        except self.model.DoesNotExist:
+        except Exception:
             messages.info(request, "Equipment type does not exists.")
             return redirect("store:equipment-types")
 
@@ -233,7 +233,7 @@ class ListParticularEquipments(ListView):
         Overridden get queryset method.
         """
         return self.model.objects.filter(
-            equipment_type__name=self.kwargs["equipment_type"], user=None
+            equipment_type__name=self.kwargs["equipment_type"], user=None, functional = True
         )
 
 
@@ -299,6 +299,15 @@ class UpdateEquipment(UpdateView):
     form_class = UpdateEquipmentForm
     success_url = reverse_lazy("store:equipments")
 
+    def get(self, request, *args, **kwargs):
+        try:
+            self.get_object()
+        except Exception:
+            messages.info(request, 'Object does not exists.')
+            return redirect('store:equipments')
+
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         """
         Overridden get context data.
@@ -317,6 +326,15 @@ class DeleteEquipment(DeleteView):
     model = Equipment
     template_name = "store/delete.html"
     success_url = reverse_lazy("store:equipments")
+
+    def get(self, request, *args, **kwargs):
+        try:
+            self.get_object()
+        except Exception:
+            messages.info(request, 'Object does not exists.')
+            return redirect('store:equipments')
+
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """

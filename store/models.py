@@ -6,6 +6,7 @@ import random
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Manager
 
 
 # Create your models here.
@@ -15,6 +16,8 @@ class Department(models.Model):
     """
 
     name = models.CharField(max_length=50)
+
+    objects = Manager()
 
     @classmethod
     def create_random_departments(cls):
@@ -32,7 +35,7 @@ class Department(models.Model):
         """
         String Representation.
         """
-        return self.name
+        return f'{self.name}'
 
 
 class EquipmentType(models.Model):
@@ -41,6 +44,8 @@ class EquipmentType(models.Model):
     """
 
     name = models.CharField(max_length=50)
+
+    objects = Manager()
 
     @property
     def get_total_equipments(self):
@@ -100,7 +105,7 @@ class EquipmentType(models.Model):
         """
         String Representation.
         """
-        return self.name
+        return f'{self.name}'
 
 
 class Equipment(models.Model):
@@ -119,6 +124,8 @@ class Equipment(models.Model):
         EquipmentType, on_delete=models.CASCADE, related_name="equipment"
     )
     functional = models.BooleanField(default=True)
+
+    objects = Manager()
 
     @property
     def set_label(self):
@@ -159,4 +166,4 @@ class Equipment(models.Model):
         """
         String Representation.
         """
-        return self.label
+        return f'{self.label}'
