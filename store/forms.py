@@ -4,23 +4,23 @@
 
 from django import forms
 from django.contrib.auth.models import User
-from store.models import Department, Equipment, EquipmentType
+from store.models import Equipment, EquipmentType
 
 
-class DepartmentForm(forms.ModelForm):
-    """
-    Form for department.
-    """
+# class DepartmentForm(forms.ModelForm):
+#     """
+#     Form for department.
+#     """
 
-    class Meta:
-        """
-        Meta class for department form.
-        """
+#     class Meta:
+#         """
+#         Meta class for department form.
+#         """
 
-        model = Department
-        fields = ("name",)
+#         model = Department
+#         fields = ("name",)
 
-        widgets = {"name": forms.TextInput(attrs={"class": "form-control"})}
+#         widgets = {"name": forms.TextInput(attrs={"class": "form-control"})}
 
 
 class EquipmentTypeForm(forms.ModelForm):
@@ -80,22 +80,22 @@ class UpdateEquipmentForm(forms.ModelForm):
         """
 
         model = Equipment
-        fields = ("label", "user", "department", "functional")
+        fields = ("label", 'serial_number', "model_number", "price", "buy_date", "functional")
 
         widgets = {
             "label": forms.TextInput(
                 attrs={"class": "form-control", "readonly": "True"}
             ),
+            "serial_number": forms.TextInput(
+                attrs={"class": "form-control"}
+            ),
+            "model_number": forms.TextInput(
+                attrs={'class': 'form-control'}
+            ),
+            "price": forms.NumberInput(
+                attrs={'class': 'form-control'}
+            ),
+            'buy_date': forms.DateInput(
+                attrs={'class': 'form-control', 'type': 'date'}
+            )
         }
-
-    user = forms.ModelChoiceField(
-        queryset=User.objects.all(), empty_label="Choose User", required=False
-    )
-    department = forms.ModelChoiceField(
-        queryset=Department.objects.all(),
-        empty_label="Choose Department",
-        required=False,
-    )
-
-    user.widget.attrs.update({"class": "form-select"})
-    department.widget.attrs.update({"class": "form-select"})

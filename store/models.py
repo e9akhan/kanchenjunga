@@ -3,38 +3,13 @@
 """
 
 import random
+from datetime import date, timedelta
 
 from django.db import models
 from django.contrib.auth.models import User
 
 
 # Create your models here.
-class Department(models.Model):
-    """
-    Department Model.
-    """
-
-    name = models.CharField(max_length=50)
-
-    @classmethod
-    def create_random_departments(cls):
-        """
-        Create random departments.
-        """
-        department_list = []
-
-        for i in range(15):
-            department_list.append(cls(name="Cohort-" + str(i)))
-
-        cls.objects.bulk_create(department_list)
-
-    def __str__(self):
-        """
-        String Representation.
-        """
-        return self.name
-
-
 class EquipmentType(models.Model):
     """
     Equipment Type Model.
@@ -71,7 +46,7 @@ class EquipmentType(models.Model):
             [
                 equipment
                 for equipment in self.equipment.all()
-                if equipment.user is not None and equipment.functional is True
+                if equipment.assigned is True and equipment.functional is True
             ]
         )
 
@@ -109,16 +84,16 @@ class Equipment(models.Model):
     """
 
     label = models.CharField(max_length=10)
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, default=None, null=True, blank=True
-    )
-    department = models.ForeignKey(
-        Department, on_delete=models.CASCADE, default=None, null=True, blank=True
-    )
+    serial_number = models.CharField(max_length=20)
+    model_number = models.CharField(max_length=20)
+    brand = models.CharField(max_length=30)
+    price = models.FloatField()
+    buy_date = models.DateField()
     equipment_type = models.ForeignKey(
         EquipmentType, on_delete=models.CASCADE, related_name="equipment"
     )
     functional = models.BooleanField(default=True)
+    assigned = models.BooleanField(default=False)
 
     @property
     def set_label(self):
@@ -137,17 +112,24 @@ class Equipment(models.Model):
         """
         Create random equipments.
         """
-        departments = list(Department.objects.all())
         equipment_types = list(EquipmentType.objects.all())
         functionality = [True, False]
+        serail_numbers = [f'{random.randint(0, 9)}{random.randint(0, 9)}{random.randint(0, 9)}' for _ in range(1000)]
+        model_numbers = [f'Model-{number}' for number in serail_numbers]
+        buy_dates = [date.today() - timedelta(days=x) for x in range(40)]
+        brands = ['Samsung', 'Nokia', 'Microsoft', 'Apple', 'Logitech', 'Dell']
 
         equipment_list = []
 
         for _ in range(500):
             instance = cls(
-                department=random.choice(departments),
+                buy_date = random.choice(buy_dates),
+                price=random.randint(1000, 10000),
+                serial_number=random.choice(serail_numbers),
+                model_number=random.choice(model_numbers),
                 equipment_type=random.choice(equipment_types),
                 functional=random.choice(functionality),
+                brand = random.choice(brands)
             )
             instance.label = instance.set_label
 
@@ -160,3 +142,11 @@ class Equipment(models.Model):
         String Representation.
         """
         return self.label
+
+
+class Allocation(models.Model):
+    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.equipment} - {self.user}'

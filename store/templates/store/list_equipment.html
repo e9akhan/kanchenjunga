@@ -15,8 +15,10 @@
         <thead>
             <th>Label</th>
             <th>Equipment Type</th>
-            <th>User</th>
-            <th>Department</th>
+            <th class="text-end p-2">Serial Number</th>
+            <th>Model Number</th>
+            <th class="text-end p-2">Price</th>
+            <th>Buy Date</th>
             <th>Functional</th>
             <th></th>
         </thead>
@@ -26,8 +28,10 @@
                 <tr>
                     <td>{{equipment.label}}</td>
                     <td>{{equipment.equipment_type}}</td>
-                    <td>{{equipment.user}}</td>
-                    <td>{{equipment.department}}</td>
+                    <td class="text-end p-2">{{equipment.serial_number}}</td>
+                    <td>{{equipment.model_number}}</td>
+                    <td class="text-end p-2">{{equipment.price}}</td>
+                    <td>{{equipment.buy_date}}</td>
                     <td>{{equipment.functional}}</td>
                     <td class="text-end">
                         <a href="{% url 'store:update-equipment' equipment.pk %}" class="btn btn-outline-success buttons">Edit</a>

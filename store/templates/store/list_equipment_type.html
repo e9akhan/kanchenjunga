@@ -16,33 +16,42 @@
     </div>
 </div>
 
-<div class="container border border-secondary rounded" style="height: 80%;">
-    <table class="table table-striped table-hover info-table">
-        <thead>
-            <th>Name</th>
-            <th class="text-end">Total</th>
-            <th class="text-end">Functional</th>
-            <th class="text-end">Assigned</th>
-            <th class="text-end">Remaining</th>
-            <th></th>
-        </thead>
-
-        <tbody>
-            {% for equipment_type in equipment_types %}
-                <tr>
-                    <td><a href="{% url 'store:particular-equipments' equipment_type.name %}">{{equipment_type.name}}</a></td>
-                    <td class="text-end">{{equipment_type.get_total_equipments}}</td>
-                    <td class="text-end">{{equipment_type.get_functional_equipments}}</td>
-                    <td class="text-end">{{equipment_type.get_assigned_equipments}}</td>
-                    <td class="text-end">{{equipment_type.get_remaining_equipments}}</td>
-                    <td class="text-end">
-                        <a href="{% url 'store:update-equipment-type' equipment_type.pk %}" class="btn btn-outline-success buttons">Edit</a>
-                        <a href = "{% url 'store:delete-equipment-type' equipment_type.pk %}" class="btn btn-outline-danger buttons">Delete</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="container" style="height: 80%;">
+  {% for equipment_type in equipment_types %}
+    <div class="d-block border border-dark rounded mb-3" style="max-width: 400px; display: inline-block;">
+      <div class="row g-0">
+        <div class="col-md-7">
+          <div class="border border-collapse d-flex justify-content-center align-items-center" style="height: 60%;">
+            <div class="text-center">
+              <h3 class="h3 m-0">{{equipment_type.get_remaining_equipments}}</h3>
+              <p class="m-0">Remaining</p>
+            </div>
+          </div>
+          <div class="d-flex align-items-center" style="height: 40%;">
+            <div class="border border-collapse d-flex justify-content-center align-items-center" style="width: 50%; height: 100%;">
+              <div class="text-center">
+                <h5 class="h5 m-0">{{equipment_type.get_total_equipments}}</h3>
+                <p class="m-0">Total</p>
+              </div>
+            </div>
+            <div class="border border-collapse d-flex justify-content-center align-items-center" style="width: 50%; height: 100%;">
+              <div class="text-center">
+                <h5 class="h5 m-0">{{equipment_type.get_assigned_equipments}}</h3>
+                <p class="m-0">Assigned</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-5">
+          <div class="card-body">
+            <h5 class="card-title mb-5"><a href="{% url 'store:particular-equipments' equipment_type.name %}">{{equipment_type.name}}</a></h5>
+            <a href="{% url 'store:update-equipment-type' equipment_type.pk %}" class="btn btn-outline-success">Edit</a>
+            <a href="{% url 'store:delete-equipment-type' equipment_type.pk %}" class="btn btn-outline-danger">Delete</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
 </div>
 
 {% endblock %}

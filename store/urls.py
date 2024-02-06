@@ -4,10 +4,6 @@
 
 from django.urls import path
 from store.views import (
-    ListDepartment,
-    CreateDepartment,
-    UpdateDepartment,
-    DeleteDepartment,
     ListEquipmentType,
     CreateEquipmentType,
     UpdateEquipmentType,
@@ -17,7 +13,6 @@ from store.views import (
     UpdateEquipment,
     DeleteEquipment,
     ListParticularEquipments,
-    SearchDepartment,
     SearchEquipment,
     SearchEquipmentType,
     SearchAssignedEquipment,
@@ -27,18 +22,18 @@ from store.views import (
 app_name = "store"
 
 urlpatterns = [
-    path("departments/", ListDepartment.as_view(), name="departments"),
-    path("add-department/", CreateDepartment.as_view(), name="add-department"),
-    path(
-        "update-department/<int:pk>/",
-        UpdateDepartment.as_view(),
-        name="update-department",
-    ),
-    path(
-        "delete-department/<int:pk>/",
-        DeleteDepartment.as_view(),
-        name="delete-department",
-    ),
+    # path("departments/", ListDepartment.as_view(), name="departments"),
+    # path("add-department/", CreateDepartment.as_view(), name="add-department"),
+    # path(
+    #     "update-department/<int:pk>/",
+    #     UpdateDepartment.as_view(),
+    #     name="update-department",
+    # ),
+    # path(
+    #     "delete-department/<int:pk>/",
+    #     DeleteDepartment.as_view(),
+    #     name="delete-department",
+    # ),
     path("", ListEquipmentType.as_view(), name="equipment-types"),
     path(
         "add-equipment-type/", CreateEquipmentType.as_view(), name="add-equipment-type"
@@ -72,7 +67,7 @@ urlpatterns = [
         SearchAssignedEquipment.as_view(),
         name="search-assigned-equipment",
     ),
-    path("search-department/", SearchDepartment.as_view(), name="search-department"),
+    # path("search-department/", SearchDepartment.as_view(), name="search-department"),
     path(
         "search-equipment-type/",
         SearchEquipmentType.as_view(),
