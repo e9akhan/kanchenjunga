@@ -18,108 +18,6 @@ from store.forms import (
 
 
 # Create your views here.
-# @method_decorator(login_required(login_url="accounts:login"), name="dispatch")
-# class ListDepartment(ListView):
-#     """
-#     List departments.
-#     """
-
-#     model = Department
-#     template_name = "store/list_department.html"
-#     paginate_by = 8
-#     context_object_name = "departments"
-
-#     def get_queryset(self):
-#         """
-#         Get queryset method.
-#         """
-#         return self.model.objects.all()[::-1]
-
-
-# @method_decorator(login_required(login_url="accounts:login"), name="dispatch")
-# class CreateDepartment(CreateView):
-#     """
-#     Create department.
-#     """
-
-#     model = Department
-#     template_name = "store/form.html"
-#     form_class = DepartmentForm
-#     success_url = reverse_lazy("store:departments")
-
-#     def get_context_data(self, **kwargs):
-#         """
-#         Overridden get context data method.
-#         """
-#         context = super().get_context_data(**kwargs)
-#         context["title"] = "Add Department"
-#         return context
-
-
-# @method_decorator(login_required(login_url="accounts:login"), name="dispatch")
-# class UpdateDepartment(UpdateView):
-#     """
-#     Update department.
-#     """
-
-#     model = Department
-#     template_name = "store/form.html"
-#     form_class = DepartmentForm
-#     success_url = reverse_lazy("store:departments")
-
-#     def get(self, request, *args, **kwargs):
-#         """
-#         Overridden get method.
-#         """
-#         try:
-#             self.get_object()
-#         except self.model.DoesNotExist:
-#             messages.info(request, "Department does not exists.")
-#             return redirect("store:departments")
-
-#         return super().get(request, *args, **kwargs)
-
-#     def get_context_data(self, **kwargs):
-#         """
-#         Overridden get context data method.
-#         """
-#         context = super().get_context_data(**kwargs)
-#         context["title"] = "Update Department"
-#         return context
-
-
-# @method_decorator(login_required(login_url="accounts:login"), name="dispatch")
-# class DeleteDepartment(DeleteView):
-#     """
-#     Delete department.
-#     """
-
-#     model = Department
-#     template_name = "store/delete.html"
-#     context_object_name = "item"
-#     success_url = reverse_lazy("store:departments")
-
-#     def get(self, request, *args, **kwargs):
-#         """
-#         Overridden get method.
-#         """
-#         try:
-#             self.get_object()
-#         except self.model.DoesNotExist:
-#             messages.info(request, "Department does not exists.")
-#             return redirect("store:departments")
-
-#         return super().get(request, *args, **kwargs)
-
-#     def get_context_data(self, **kwargs):
-#         """
-#         Overridden get context data.
-#         """
-#         context = super().get_context_data(**kwargs)
-#         context["title"] = "Delete Department"
-#         return context
-
-
 @method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class ListEquipmentType(ListView):
     """
@@ -342,24 +240,6 @@ class SearchEquipmentType(ListView):
         Overridden get queryset method.
         """
         return self.model.objects.filter(name__icontains=self.request.GET["search"])
-
-
-# @method_decorator(login_required(login_url="accounts:login"), name="dispatch")
-# class SearchDepartment(ListView):
-#     """
-#     Search Department.
-#     """
-
-#     model = Department
-#     template_name = "store/list_department.html"
-#     context_object_name = "departments"
-#     paginate_by = 8
-
-#     def get_queryset(self):
-#         """
-#         Overridden get queryset method.
-#         """
-#         return self.model.objects.filter(name__icontains=self.request.GET["search"])
 
 
 @method_decorator(login_required(login_url="accounts:login"), name="dispatch")

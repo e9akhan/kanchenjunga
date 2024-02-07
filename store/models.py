@@ -147,6 +147,7 @@ class Equipment(models.Model):
 class Allocation(models.Model):
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    returned = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.equipment} - {self.user}'

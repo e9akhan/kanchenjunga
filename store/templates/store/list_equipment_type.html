@@ -1,54 +1,35 @@
-{% extends 'store/base2.html' %}
+{% extends 'store/base.html' %}
 
-{% block app_content %}
-
+{% block content %}
 <div class="row container-box p-2">
-    <div class="col-9">
-      <form action="{% url 'store:search-equipment-type' %}">
-        <input type="text" class="form-control" placeholder="Search" name="search">
-      </form>
+  <div class="col-9">
+    <form action="{% url 'store:search-equipment-type' %}">
+      <input type="text" class="form-control" placeholder="Search" name="search">
+    </form>
+  </div>
+
+  <div class="col-3 position-relative">
+    <div class="position-absolute end-0">
+      <a href="{% url 'store:add-equipment-type' %}" class="btn btn-success add-button">Add Equipment Type</a>
     </div>
-  
-    <div class="col-3 position-relative">
-      <div class="position-absolute end-0">
-        <a href="{% url 'store:add-equipment-type' %}" class="btn btn-success add-button">Add Equipment Type</a>
-      </div>
-    </div>
+  </div>
 </div>
 
-<div class="container" style="height: 80%;">
-  {% for equipment_type in equipment_types %}
-    <div class="d-block border border-dark rounded mb-3" style="max-width: 400px; display: inline-block;">
-      <div class="row g-0">
-        <div class="col-md-7">
-          <div class="border border-collapse d-flex justify-content-center align-items-center" style="height: 60%;">
-            <div class="text-center">
-              <h3 class="h3 m-0">{{equipment_type.get_remaining_equipments}}</h3>
-              <p class="m-0">Remaining</p>
-            </div>
-          </div>
-          <div class="d-flex align-items-center" style="height: 40%;">
-            <div class="border border-collapse d-flex justify-content-center align-items-center" style="width: 50%; height: 100%;">
-              <div class="text-center">
-                <h5 class="h5 m-0">{{equipment_type.get_total_equipments}}</h3>
-                <p class="m-0">Total</p>
-              </div>
-            </div>
-            <div class="border border-collapse d-flex justify-content-center align-items-center" style="width: 50%; height: 100%;">
-              <div class="text-center">
-                <h5 class="h5 m-0">{{equipment_type.get_assigned_equipments}}</h3>
-                <p class="m-0">Assigned</p>
-              </div>
-            </div>
+<div class="row row-cols-2 row-cols-sm-2 row-cols-md-3">
+    {% for equipment_type in equipment_types %}
+    <div class="col rounded mb-3 p-0 m-2 shadow bg-light" style="max-width: 250px;">
+      <div class="text-center">
+        <div class="position-relative">
+          <div class="position-absolute end-0 p-1">
+            <a href="{% url 'store:update-equipment-type' equipment_type.pk %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+            <a href="{% url 'store:delete-equipment-type' equipment_type.pk %}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
           </div>
         </div>
-        <div class="col-md-5">
-          <div class="card-body">
-            <h5 class="card-title mb-5"><a href="{% url 'store:particular-equipments' equipment_type.name %}">{{equipment_type.name}}</a></h5>
-            <a href="{% url 'store:update-equipment-type' equipment_type.pk %}" class="btn btn-outline-success">Edit</a>
-            <a href="{% url 'store:delete-equipment-type' equipment_type.pk %}" class="btn btn-outline-danger">Delete</a>
-          </div>
-        </div>
+        <h5 class="m-2"><a href="{% url 'store:particular-equipments' equipment_type.name %}" style="color: black;">{{equipment_type}}</a></h5>
+      </div>
+      <hr>
+      <div class="d-flex align-items-center justify-content-center m-2">
+        <h3>{{equipment_type.get_remaining_equipments}}</h5>
       </div>
     </div>
   {% endfor %}
