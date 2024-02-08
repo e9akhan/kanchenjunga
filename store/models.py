@@ -18,44 +18,11 @@ class EquipmentType(models.Model):
     name = models.CharField(max_length=50)
 
     @property
-    def get_total_equipments(self):
+    def get_remaining_equipments(self):
         """
         Get total equipments.
         """
-        return self.equipment.count()
-
-    @property
-    def get_functional_equipments(self):
-        """
-        Get functional equipments.
-        """
-        return len(
-            [
-                equipment
-                for equipment in self.equipment.all()
-                if equipment.functional is True
-            ]
-        )
-
-    @property
-    def get_assigned_equipments(self):
-        """
-        Get assigned equipments.
-        """
-        return len(
-            [
-                equipment
-                for equipment in self.equipment.all()
-                if equipment.assigned is True and equipment.functional is True
-            ]
-        )
-
-    @property
-    def get_remaining_equipments(self):
-        """
-        Get remaining equipments.
-        """
-        return self.get_functional_equipments - self.get_assigned_equipments
+        return len(Equipment.get_non_assigned_items(self))
 
     @classmethod
     def create_random_equipment_types(cls):
@@ -93,7 +60,6 @@ class Equipment(models.Model):
         EquipmentType, on_delete=models.CASCADE, related_name="equipment"
     )
     functional = models.BooleanField(default=True)
-    assigned = models.BooleanField(default=False)
 
     @property
     def set_label(self):
@@ -102,10 +68,62 @@ class Equipment(models.Model):
         """
         try:
             temp_id = list(self.equipment_type.equipment.all())[-1]
-            count = int(temp_id.label[6:]) + 1
+            count = int(temp_id.label[4:]) + 1
         except IndexError:
             count = 1
         return f"{self.equipment_type.name[:3]}-{count:0>6}"
+
+    @property
+    def get_current_user(self):
+        allocations = self.allocation.all()
+        if allocations:
+            return allocations[-1].user
+        return "None"
+    
+    @classmethod
+    def get_all_equipments(cls, equipment_type):
+        return cls.object.filter(equipment_type = equipment_type)
+    
+    @classmethod
+    def get_all_functional_equipments(cls, equipment_type):
+        return cls.objects.filter(equipment_type = equipment_type, functional = True)
+
+    @classmethod
+    def get_non_functional_equipments(cls, equipment_type):
+        return cls.objects.filter(equipment_type = equipment_type, functional = False)
+
+    @classmethod
+    def get_assigned_items(cls, equipment_type):
+        equipments = cls.objects.filter(equipment_type = equipment_type)
+        assigned_equipments = []
+        
+        for equipment in equipments:
+            allocations = equipment.allocation.all()
+            if not allocations:
+                continue
+
+            last_allocation = list(allocations)[-1]
+            if not last_allocation.returned:
+                assigned_equipments.append(equipment)
+
+        return assigned_equipments
+    
+    @classmethod
+    def get_non_assigned_items(cls, equipment_type):
+        equipments = cls.objects.filter(equipment_type = equipment_type)
+        non_assigned_equipments = []
+
+        for equipment in equipments:
+            allocations = equipment.allocation.all()
+            if not allocations:
+                non_assigned_equipments.append(equipment)
+                continue
+
+            last_allocation = list(allocations)[-1]
+            if last_allocation.returned:
+                non_assigned_equipments.append(equipment)
+
+        return non_assigned_equipments
 
     @classmethod
     def create_random_equipments(cls):
@@ -114,8 +132,8 @@ class Equipment(models.Model):
         """
         equipment_types = list(EquipmentType.objects.all())
         functionality = [True, False]
-        serail_numbers = [f'{random.randint(0, 9)}{random.randint(0, 9)}{random.randint(0, 9)}' for _ in range(1000)]
-        model_numbers = [f'Model-{number}' for number in serail_numbers]
+        serial_numbers = [f'{random.randint(0, 9)}{random.randint(0, 9)}{random.randint(0, 9)}' for _ in range(1000)]
+        model_numbers = [f'Model-{number}' for number in serial_numbers]
         buy_dates = [date.today() - timedelta(days=x) for x in range(40)]
         brands = ['Samsung', 'Nokia', 'Microsoft', 'Apple', 'Logitech', 'Dell']
 
@@ -125,7 +143,7 @@ class Equipment(models.Model):
             instance = cls(
                 buy_date = random.choice(buy_dates),
                 price=random.randint(1000, 10000),
-                serial_number=random.choice(serail_numbers),
+                serial_number=random.choice(serial_numbers),
                 model_number=random.choice(model_numbers),
                 equipment_type=random.choice(equipment_types),
                 functional=random.choice(functionality),
@@ -145,7 +163,7 @@ class Equipment(models.Model):
 
 
 class Allocation(models.Model):
-    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE)
+    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE, related_name='allocation')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     returned = models.BooleanField(default=False)
 

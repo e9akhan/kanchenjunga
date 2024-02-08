@@ -46,6 +46,14 @@ a:link{
     color: #7952b3;
 }
 
+.border-bottom{
+    border-bottom: 1px solid black;
+}
+
+.border-right{
+    border-right: 1px solid black;
+}
+
 @media only screen and (max-width: 1000px) and (min-width: 751px){
     .buttons{
         font-size: 0.9rem;

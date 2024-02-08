@@ -10,7 +10,7 @@
 
   <div class="col-3 position-relative">
     <div class="position-absolute end-0">
-      <a href="{% url 'store:add-equipment-type' %}" class="btn btn-success add-button">Add Equipment Type</a>
+      <a href="{% url 'store:add-equipment-type' %}" class="btn btn-success add-button">Add New</a>
     </div>
   </div>
 </div>
@@ -21,16 +21,16 @@
       <div class="text-center">
         <div class="position-relative">
           <div class="position-absolute end-0 p-1">
-            <a href="{% url 'store:update-equipment-type' equipment_type.pk %}"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
             <a href="{% url 'store:delete-equipment-type' equipment_type.pk %}"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
           </div>
         </div>
-        <h5 class="m-2"><a href="{% url 'store:particular-equipments' equipment_type.name %}" style="color: black;">{{equipment_type}}</a></h5>
+        <h5 class="m-2">{{equipment_type}}</h5>
       </div>
       <hr>
       <div class="d-flex align-items-center justify-content-center m-2">
         <h3>{{equipment_type.get_remaining_equipments}}</h5>
       </div>
+      <a href="{% url 'store:particular-equipments' equipment_type.name %}" class="btn btn-outline-secondary btn-sm m-2">List Items</a>
     </div>
   {% endfor %}
 </div>

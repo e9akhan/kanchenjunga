@@ -25,13 +25,10 @@
             <div class="functional-tabs">
               {% if request.user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link text-white" aria-current="page" href="{% url 'store:add-equipment' %}">Assign</a>
+                <a class="nav-link text-white" aria-current="page" href="{% url 'store:create-allocation' %}">Assign</a>
               </li>
                 <li class="nav-item">
                   <a class="nav-link text-white" aria-current="page" href="{% url 'store:equipment-types' %}">Equipment Types</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-white" href="{% url 'store:equipments' %}">Assigned Equipments</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link text-white" href="{% url 'accounts:users' %}">Users</a>
@@ -53,40 +50,43 @@
     </nav>
 
       <div class="d-flex justify-content-center align-items-center" style="height: 94%;">
-        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height: 100%;" id="side-bar">
-          <a href="{% url 'store:equipment-types' %}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-            <span class="fs-4">Inventory Store</span>
-          </a>
-          <hr>
-          <ul class="nav nav-pills flex-column mb-auto">
-            <a href="" class="btn btn-dark">Assign</a>
-            <li>
-              <a href="{% url 'store:equipment-types' %}" class="nav-link link-dark">
-                Dashboard
-              </a>
-            </li>
-            <li>
-              <a href="{% url 'accounts:users' %}" class="nav-link link-dark">
-                Users
-              </a>
-            </li>
-            <li>
-              <a href="#" class="nav-link link-dark">
-                Returned
-              </a>
-            </li>
-          </ul>
-          <hr>
-          <div class="dropdown">
-            <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fa fa-user p-1" style="font-size: xx-large;"></i>
-              <strong>{{request.user|title}}</strong>
+        <div id="side-bar" style="height: 100%;">
+          <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height: 100%;">
+            <a href="{% url 'store:equipment-types' %}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+              <span class="fs-4">Inventory Store</span>
             </a>
-            <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
-              <li><a class="dropdown-item" href="{% url 'accounts:update-user' request.user.pk %}">Edit Profile</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Sign out</a></li>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+              <a href="{% url 'store:create-allocation' %}" class="btn btn-dark mb-2">Assign</a>
+              <a href="{% url 'store:add-equipment' %}" class="btn btn-dark mb-2">Add Equipment</a>
+              <li>
+                <a href="{% url 'store:equipment-types' %}" class="nav-link link-dark">
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'accounts:users' %}" class="nav-link link-dark">
+                  Users
+                </a>
+              </li>
+              <li>
+                <a href="#" class="nav-link link-dark">
+                  Returned
+                </a>
+              </li>
             </ul>
+            <hr>
+            <div class="dropdown">
+              <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-user p-1" style="font-size: xx-large;"></i>
+                <strong>{{request.user|title}}</strong>
+              </a>
+              <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                <li><a class="dropdown-item" href="{% url 'accounts:update-user' request.user.pk %}">Edit Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Sign out</a></li>
+              </ul>
+            </div>
           </div>
         </div>
   

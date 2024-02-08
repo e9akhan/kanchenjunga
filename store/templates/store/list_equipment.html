@@ -1,46 +1,47 @@
-{% extends 'store/base2.html' %}
+{% extends 'store/base.html' %}
 
-{% block app_content %}
+{% block content %}
 
-<div class="row container-box p-2">
-    {% block search_form %}
-        <form action="{% url 'store:search-equipment' %}">
+<div class="container-box p-2">
+    <form action="{% url 'store:search-equipment' %}">
         <input type="text" class="form-control" placeholder="Search" name="search">
-        </form>
-    {% endblock %}
+    </form>
 </div>
 
-<div class="container border border-secondary rounded" style="height: 80%;">
-    <table class="table table-striped table-hover info-table">
-        <thead>
-            <th>Label</th>
-            <th>Equipment Type</th>
-            <th class="text-end p-2">Serial Number</th>
-            <th>Model Number</th>
-            <th class="text-end p-2">Price</th>
-            <th>Buy Date</th>
-            <th>Functional</th>
-            <th></th>
-        </thead>
+<div class="shadow-lg container bg-light" style="height: 85%;">
+    <div class="d-flex w-100 m-0 text-center justify-content-between align-items-center" style="height: 7%;">
+        <div></div>
+        <h5>{{total}} Records</h5>
+        <div class="btn-group">
+            <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Use Filter
+            </button>
+            {% block filter %}
+                <ul class="dropdown-menu dropdown-menu-lg-end">
+                    <li><a href="" class="dropdown-item">Total</a></li>
+                    <li><a href="" class="dropdown-item">Assigned</a></li>
+                    <li><a href="" class="dropdown-item">Returned</a></li>
+                </ul>
+            {% endblock %}
+        </div>
+    </div>
+    <hr class="m-0">
 
-        <tbody>
-            {% for equipment in equipments %}
-                <tr>
-                    <td>{{equipment.label}}</td>
-                    <td>{{equipment.equipment_type}}</td>
-                    <td class="text-end p-2">{{equipment.serial_number}}</td>
-                    <td>{{equipment.model_number}}</td>
-                    <td class="text-end p-2">{{equipment.price}}</td>
-                    <td>{{equipment.buy_date}}</td>
-                    <td>{{equipment.functional}}</td>
-                    <td class="text-end">
-                        <a href="{% url 'store:update-equipment' equipment.pk %}" class="btn btn-outline-success buttons">Edit</a>
-                        <a href = "{% url 'store:delete-equipment' equipment.pk %}" class="btn btn-outline-danger buttons">Delete</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="container m-0 w-100 p-1 overflow-scroll" style="height: 86%;">
+        {% for object in object_list %}
+        <div class="d-flex justify-content-between align-items-center w-100 p-2 border-bottom">
+            <strong>{{object.label}}</strong>
+            <span>{{ object.get_current_user }}</span>
+            <a href="{% url 'store:detail-equipment' object.pk %}" class="btn btn-outline-dark btn-sm">View Details</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="d-flex align-items-center justify-content-center w-100">
+        {% include 'store/pagination.html' %}
+    </div>
+</div>
+
 </div>
 
 {% endblock %}
