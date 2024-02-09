@@ -6,7 +6,6 @@ from django.urls import path
 from store.views import (
     ListEquipmentType,
     CreateEquipmentType,
-    UpdateEquipmentType,
     DeleteEquipmentType,
     CreateEquipment,
     UpdateEquipment,
@@ -14,9 +13,12 @@ from store.views import (
     DetailEquipment,
     ListParticularEquipments,
     CreateAllocation,
+    UpdateAllocation,
+    DeleteAllocation,
+    ListAllocation,
     SearchEquipment,
     SearchEquipmentType,
-    SearchAssignedEquipment,
+    SearchAllocation,
     get_ids
 )
 
@@ -34,16 +36,16 @@ urlpatterns = [
     ),
     path("add-equipment/", CreateEquipment.as_view(), name="add-equipment"),
     path(
-        "update-equipment/<int:pk>/", UpdateEquipment.as_view(), name="update-equipment"
+        "update-equipment/<str:equipment_type>/<str:filter>/<int:pk>/", UpdateEquipment.as_view(), name="update-equipment"
     ),
     path(
-        "delete-equipment/<int:pk>/", DeleteEquipment.as_view(), name="delete-equipment"
+        "delete-equipment/<str:equipment_type>/<str:filter>/<int:pk>/", DeleteEquipment.as_view(), name="delete-equipment"
     ),
     path(
-        'detail-equipment/<int:pk>/', DetailEquipment.as_view(), name='detail-equipment'
+        'detail-equipment/<str:equipment_type>/<str:filter>/<int:pk>/', DetailEquipment.as_view(), name='detail-equipment'
     ),
     path(
-        "equipments/<str:equipment_type>/",
+        "equipments/<str:equipment_type>/<str:filter>/",
         ListParticularEquipments.as_view(),
         name="particular-equipments",
     ),
@@ -52,16 +54,31 @@ urlpatterns = [
         CreateAllocation.as_view(),
         name='create-allocation'
     ),
-    path("search-equipment/", SearchEquipment.as_view(), name="search-equipment"),
     path(
-        "search-assigned-equipment/",
-        SearchAssignedEquipment.as_view(),
-        name="search-assigned-equipment",
+        'allocations/<str:filter>/update-allocation/<int:pk>',
+        UpdateAllocation.as_view(),
+        name='update-allocation'
     ),
+    path(
+        'allocations/<str:filter>/delete-allocation/<int:pk>',
+        DeleteAllocation.as_view(),
+        name='delete-allocation'
+    ),
+    path(
+        'allocations/<str:filter>',
+        ListAllocation.as_view(),
+        name='allocations'
+    ),
+    path("search-equipment/<str:equipment_type>/<str:filter>/", SearchEquipment.as_view(), name="search-equipment"),
     path(
         "search-equipment-type/",
         SearchEquipmentType.as_view(),
         name="search-equipment-type",
+    ),
+    path(
+        'search-allocation/<str:filter>',
+        SearchAllocation.as_view(),
+        name='search-allocation'
     ),
     path('get_ids/', get_ids, name='get_ids')
 ]

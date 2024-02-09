@@ -30,7 +30,7 @@
       <div class="d-flex align-items-center justify-content-center m-2">
         <h3>{{equipment_type.get_remaining_equipments}}</h5>
       </div>
-      <a href="{% url 'store:particular-equipments' equipment_type.name %}" class="btn btn-outline-secondary btn-sm m-2">List Items</a>
+      <a href="{% url 'store:particular-equipments' equipment_type=equipment_type.name filter='total' %}" class="btn btn-outline-secondary btn-sm m-2">List Items</a>
     </div>
   {% endfor %}
 </div>

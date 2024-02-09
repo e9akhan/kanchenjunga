@@ -124,8 +124,7 @@ class ListUser(ListView):
 
     model = User
     template_name = "accounts/list_user.html"
-    context_object_name = "users"
-    paginate_by = 10
+    paginate_by = 25
 
 
 class UserLoginView(LoginView):
@@ -146,8 +145,7 @@ class SearchUser(ListView):
 
     model = User
     template_name = "accounts/list_user.html"
-    paginate_by = 8
-    context_object_name = "users"
+    paginate_by = 25
 
     def get_queryset(self):
         """

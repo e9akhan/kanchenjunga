@@ -22,7 +22,11 @@ class EquipmentType(models.Model):
         """
         Get total equipments.
         """
-        return len(Equipment.get_non_assigned_items(self))
+        return len(Equipment.get_non_assigned_equipments(self))
+    
+    @property
+    def get_equipment_ids(self):
+        return Equipment.get_non_assigned_equipments(self)
 
     @classmethod
     def create_random_equipment_types(cls):
@@ -59,6 +63,7 @@ class Equipment(models.Model):
     equipment_type = models.ForeignKey(
         EquipmentType, on_delete=models.CASCADE, related_name="equipment"
     )
+    under_repair = models.BooleanField(default=False)
     functional = models.BooleanField(default=True)
 
     @property
@@ -78,23 +83,23 @@ class Equipment(models.Model):
         allocations = self.allocation.all()
         if allocations:
             return allocations[-1].user
-        return "None"
+        return "No User"
     
     @classmethod
     def get_all_equipments(cls, equipment_type):
-        return cls.object.filter(equipment_type = equipment_type)
+        return cls.objects.filter(equipment_type = equipment_type)
     
     @classmethod
     def get_all_functional_equipments(cls, equipment_type):
         return cls.objects.filter(equipment_type = equipment_type, functional = True)
 
     @classmethod
-    def get_non_functional_equipments(cls, equipment_type):
-        return cls.objects.filter(equipment_type = equipment_type, functional = False)
+    def get_under_repair_equipments(cls, equipment_type):
+        return cls.objects.filter(equipment_type = equipment_type, functional = True, under_repair=True)
 
     @classmethod
-    def get_assigned_items(cls, equipment_type):
-        equipments = cls.objects.filter(equipment_type = equipment_type)
+    def get_assigned_equipments(cls, equipment_type):
+        equipments = cls.objects.filter(equipment_type = equipment_type, functional=True)
         assigned_equipments = []
         
         for equipment in equipments:
@@ -109,8 +114,8 @@ class Equipment(models.Model):
         return assigned_equipments
     
     @classmethod
-    def get_non_assigned_items(cls, equipment_type):
-        equipments = cls.objects.filter(equipment_type = equipment_type)
+    def get_non_assigned_equipments(cls, equipment_type):
+        equipments = cls.objects.filter(equipment_type = equipment_type, functional=True)
         non_assigned_equipments = []
 
         for equipment in equipments:
@@ -124,6 +129,13 @@ class Equipment(models.Model):
                 non_assigned_equipments.append(equipment)
 
         return non_assigned_equipments
+    
+    @classmethod
+    def get_ids(cls, equipment_type):
+        return [
+            (equipment.id, equipment.label)
+            for equipment in cls.get_non_assigned_equipments(equipment_type)
+        ]
 
     @classmethod
     def create_random_equipments(cls):
@@ -166,6 +178,12 @@ class Allocation(models.Model):
     equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE, related_name='allocation')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     returned = models.BooleanField(default=False)
+
+    @classmethod
+    def get_non_returned_allocations(cls):
+        return cls.objects.filter(
+            returned = False
+        )
 
     def __str__(self):
         return f'{self.equipment} - {self.user}'

@@ -1,47 +1,28 @@
-{% extends 'store/base.html' %}
+{% extends 'store/list.html' %}
 
-{% block content %}
-
+{% block search %}
 <div class="container-box p-2">
-    <form action="{% url 'store:search-equipment' %}">
+    <form action="{% url 'store:search-equipment' equipment_type=equipment_type filter=filter %}">
         <input type="text" class="form-control" placeholder="Search" name="search">
     </form>
 </div>
+{% endblock %}
 
-<div class="shadow-lg container bg-light" style="height: 85%;">
-    <div class="d-flex w-100 m-0 text-center justify-content-between align-items-center" style="height: 7%;">
-        <div></div>
-        <h5>{{total}} Records</h5>
-        <div class="btn-group">
-            <button class="btn btn-outline-dark btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Use Filter
-            </button>
-            {% block filter %}
-                <ul class="dropdown-menu dropdown-menu-lg-end">
-                    <li><a href="" class="dropdown-item">Total</a></li>
-                    <li><a href="" class="dropdown-item">Assigned</a></li>
-                    <li><a href="" class="dropdown-item">Returned</a></li>
-                </ul>
-            {% endblock %}
-        </div>
-    </div>
-    <hr class="m-0">
+{% block filter %}
+<ul class="dropdown-menu dropdown-menu-lg-end">
+    <li><a href="{% url 'store:particular-equipments' equipment_type=equipment_type filter='total'%}" class="dropdown-item">Total</a></li>
+    <li><a href="{% url 'store:particular-equipments' equipment_type=equipment_type filter='assigned'%}" class="dropdown-item">Assigned</a></li>
+    <li><a href="{% url 'store:particular-equipments' equipment_type=equipment_type filter='non_assigned'%}" class="dropdown-item">In Stock</a></li>
+    <li><a href="{% url 'store:particular-equipments' equipment_type=equipment_type filter='functional'%}" class="dropdown-item">Functional</a></li>
+    <li><a href="{% url 'store:particular-equipments' equipment_type=equipment_type filter='under_repair'%}" class="dropdown-item">Under Repair</a></li>
+</ul>
+{% endblock %}
 
-    <div class="container m-0 w-100 p-1 overflow-scroll" style="height: 86%;">
-        {% for object in object_list %}
-        <div class="d-flex justify-content-between align-items-center w-100 p-2 border-bottom">
-            <strong>{{object.label}}</strong>
-            <span>{{ object.get_current_user }}</span>
-            <a href="{% url 'store:detail-equipment' object.pk %}" class="btn btn-outline-dark btn-sm">View Details</a>
-        </div>
-        {% endfor %}
-    </div>
-
-    <div class="d-flex align-items-center justify-content-center w-100">
-        {% include 'store/pagination.html' %}
-    </div>
+{% block items %}
+{% for object in object_list %}
+<div class="d-flex justify-content-between align-items-center w-100 p-2 border-bottom">
+    <strong>{{object.label}}</strong>
+    <a href="{% url 'store:detail-equipment' pk=object.pk equipment_type=equipment_type filter=filter %}" class="btn btn-outline-dark btn-sm">View Details</a>
 </div>
-
-</div>
-
+{% endfor %}
 {% endblock %}

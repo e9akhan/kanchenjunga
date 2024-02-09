@@ -13,7 +13,12 @@
                     'equipment_type': equipment_type
                 },
                 success: function(data){
-                    $('#id_equipment').html(data);
+                    var len = data.length
+                    $('#id_equipment').empty()
+                    for(var i=0; i<len; i++){
+                        $('#id_equipment').append("<option value'"+data[i][0]+"'>"+data[i][1]+"</option>");
+                    }
+                    $('#id_equipment').prop('disabled', false);
                 }
             });
         });

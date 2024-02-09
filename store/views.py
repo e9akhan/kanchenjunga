@@ -3,6 +3,8 @@
 """
 
 from django.shortcuts import redirect
+from django.http import JsonResponse
+from django.core import serializers
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView, DetailView
 from django.contrib import messages
@@ -15,7 +17,8 @@ from store.forms import (
     EquipmentTypeForm,
     AddEquipmentForm,
     UpdateEquipmentForm,
-    CreateAllocationForm
+    CreateAllocationForm,
+    UpdateAllocationForm
 )
 
 
@@ -48,38 +51,6 @@ class CreateEquipmentType(CreateView):
         """
         context = super().get_context_data(**kwargs)
         context["title"] = "Add Equipment Type"
-        return context
-
-
-@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
-class UpdateEquipmentType(UpdateView):
-    """
-    Update equipment type.
-    """
-
-    model = EquipmentType
-    template_name = "store/form.html"
-    form_class = EquipmentTypeForm
-    success_url = reverse_lazy("store:equipment-types")
-
-    def get(self, request, *args, **kwargs):
-        """
-        Overridden get method.
-        """
-        try:
-            self.get_object()
-        except self.model.DoesNotExist:
-            messages.info(request, "Equipment type does not exists.")
-            return redirect("store:equipment-types")
-
-        return super().get(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        """
-        Overridden get context data.
-        """
-        context = super().get_context_data(**kwargs)
-        context["title"] = "Update Equipment Type"
         return context
 
 
@@ -124,15 +95,23 @@ class ListParticularEquipments(ListView):
     model = Equipment
     template_name = "store/list_equipment.html"
     paginate_by = 25
-    context_object_name = "equipments"
 
     def get_queryset(self):
         """
         Overridden get queryset method.
         """
-        return self.model.objects.filter(
-            equipment_type__name=self.kwargs["equipment_type"]
-        )[::-1]
+        filter = self.kwargs['filter']
+        equipment_type = EquipmentType.objects.get(name = self.kwargs['equipment_type'])
+
+        if filter == 'assigned':
+            return self.model.get_assigned_equipments(equipment_type=equipment_type)[::-1]
+        elif filter == 'non_assigned':
+            return self.model.get_non_assigned_equipments(equipment_type = equipment_type)[::-1]
+        elif filter == 'functional':
+            return self.model.get_all_functional_equipments(equipment_type = equipment_type)[::-1]
+        elif filter == 'under_repair':
+            return self.model.get_under_repair_equipments(equipment_type=equipment_type)[::-1]
+        return self.model.get_all_equipments(equipment_type=equipment_type)[::-1]
     
     def get_context_data(self, **kwargs):
         """
@@ -140,6 +119,8 @@ class ListParticularEquipments(ListView):
         """
         context = super().get_context_data(**kwargs)
         context['total'] = len(self.get_queryset())
+        context['equipment_type'] = self.kwargs['equipment_type']
+        context['filter'] = self.kwargs['filter']
         return context
 
 
@@ -179,10 +160,15 @@ class UpdateEquipment(UpdateView):
         """
         context = super().get_context_data(**kwargs)
         context["title"] = "Update Equipment"
+        context['equipment_type'] = self.kwargs['equipment_type']
+        context['filter'] = self.kwargs['filter']
         return context
     
     def get_success_url(self):
-        return reverse_lazy('store:particular-equipments', kwargs=self.kwargs['equipment_type'])
+        """
+            Get success URL.
+        """
+        return reverse_lazy('store:particular-equipments', kwargs={'equipment_type': self.kwargs['equipment_type'], 'filter': self.kwargs['filter']})
 
 
 @method_decorator(login_required(login_url="accounts:login"), name="dispatch")
@@ -193,15 +179,21 @@ class DeleteEquipment(DeleteView):
 
     model = Equipment
     template_name = "store/delete.html"
-    success_url = reverse_lazy("store:equipments")
 
     def get_context_data(self, **kwargs):
         """
-        Overridden get context data.
+            Get Context data.
         """
         context = super().get_context_data(**kwargs)
-        context["title"] = "Delete Equipment"
+        context['equipment_type'] = self.kwargs['equipment_type']
+        context['filter'] = self.kwargs['filter']
         return context
+    
+    def get_success_url(self):
+        """
+            Get success URL.
+        """
+        return reverse_lazy('store:particular-equipments', kwargs={'equipment_type': self.kwargs['equipment_type'], 'filter': self.kwargs['filter']})
 
 
 class DetailEquipment(LoginRequiredMixin, DetailView):
@@ -212,6 +204,15 @@ class DetailEquipment(LoginRequiredMixin, DetailView):
     model = Equipment
     template_name = 'store/detail.html'
     context_object_name = 'equipment'
+
+    def get_context_data(self, **kwargs):
+        """
+            Get Context data.
+        """
+        context = super().get_context_data(**kwargs)
+        context['equipment_type'] = self.kwargs['equipment_type']
+        context['filter'] = self.kwargs['filter']
+        return context
 
 
 class CreateAllocation(CreateView):
@@ -225,8 +226,73 @@ class CreateAllocation(CreateView):
     success_url = reverse_lazy('store:create-allocation')
 
     def get_context_data(self, **kwargs):
+        """
+            Get context data.
+        """
         context = super().get_context_data(**kwargs)
         context['title'] = 'Create Allocation'
+        return context
+    
+class UpdateAllocation(UpdateView):
+    """
+        Update Allocation.
+    """
+
+    model = Allocation
+    form_class = UpdateAllocationForm
+    template_name = 'store/form.html'
+
+    def get_context_data(self, **kwargs):
+        """
+            Get context data.
+        """
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Update Allocation'
+        return context
+    
+    def get_success_url(self):
+        return reverse_lazy('store:allocations', kwargs={'filter': self.kwargs['filter']})
+    
+
+class DeleteAllocation(DeleteView):
+    """
+        Delete Allocation.
+    """
+
+    model = Allocation
+    template_name = 'store/delete.html'
+
+    def get_context_data(self, **kwargs):
+        """
+            Get context data.
+        """
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Delete Allocation'
+        return context
+    
+    def get_success_url(self):
+        return reverse_lazy('store:allocations', kwargs={'filter': self.kwargs['filter']})
+    
+
+class ListAllocation(ListView):
+    """
+        List Allocations.
+    """
+
+    model = Allocation
+    template_name = 'store/list_allocation.html'
+    paginate_by = 25
+
+    def get_queryset(self):
+        filter = self.kwargs['filter']
+
+        if filter == 'not_returned':
+            return self.model.get_non_returned_allocations()[::-1]
+        return self.model.objects.all()[::-1]
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.kwargs['filter']
         return context
 
 
@@ -239,14 +305,14 @@ class SearchEquipmentType(ListView):
     model = EquipmentType
     template_name = "store/list_equipment_type.html"
     context_object_name = "equipment_types"
-    paginate_by = 8
 
     def get_queryset(self):
         """
         Overridden get queryset method.
         """
-        return self.model.objects.filter(name__icontains=self.request.GET["search"])
-
+        search = self.request.GET['search']
+        return self.model.objects.filter(name__icontains = search)
+        
 
 @method_decorator(login_required(login_url="accounts:login"), name="dispatch")
 class SearchEquipment(ListView):
@@ -257,42 +323,73 @@ class SearchEquipment(ListView):
     model = Equipment
     template_name = "store/list_equipment.html"
     context_object_name = "equipments"
-    paginate_by = 8
+    paginate_by = 25
 
     def get_queryset(self):
         """
         Overridden get queryset method.
         """
         search = self.request.GET["search"]
-        return self.model.objects.filter(
+        filter = self.kwargs['filter']
+        equipment_type = EquipmentType.objects.get(name = self.kwargs['equipment_type'])
+
+        if filter == 'assigned':
+            query = self.model.get_assigned_equipments(equipment_type=equipment_type)
+        elif filter == 'non_assigned':
+            query = self.model.get_non_assigned_equipments(equipment_type = equipment_type)
+        elif filter == 'functional':
+            query = self.model.get_all_functional_equipments(equipment_type = equipment_type)
+        elif filter == 'non_functional':
+            query = self.model.get_non_functional_equipments(equipment_type=equipment_type)
+        else:
+            query = self.model.get_all_equipments(equipment_type=equipment_type)
+
+        return query.filter(
             Q(label__icontains=search)
             | Q(equipment_type__name__icontains=search)
-            | Q(functional__icontains=search),
+            | Q(buy_date_icontains = search)
+            | Q(serial_number__icontains = search)
+            | Q(model_number__icontains = search)
+            | Q(price__icontains = search)
+            | Q(brand__icontains = search)
         )[::-1]
-
-
+    
+    def get_context_data(self, **kwargs):
+        """
+            Get Context data.
+        """
+        context = super().get_context_data(**kwargs)
+        context['total'] = len(self.get_queryset())
+        context['equipment_type'] = self.kwargs['equipment_type']
+        context['filter'] = self.kwargs['filter']
+        return context
+    
 @method_decorator(login_required(login_url="accounts:login"), name="dispatch")
-class SearchAssignedEquipment(ListView):
+class SearchAllocation(ListView):
     """
-    Search assigned equipment.
+    Search equipment type.
     """
 
-    model = Equipment
-    template_name = "store/list_assigned_equipment.html"
-    context_object_name = "equipments"
-    paginate_by = 8
+    model = Allocation
+    template_name = "store/list_allocation.html"
+    paginate_by = 25
 
     def get_queryset(self):
         """
         Overridden get queryset method.
         """
-        search = self.request.GET["search"]
-        return self.model.objects.filter(
-            Q(label__icontains=search)
-            | Q(equipment_type__name__icontains=search)
-            | Q(functional__icontains=search)
-        )[::-1]
+        search = self.request.GET['search']
+        return self.model.objects.filter(user__username__icontains = search)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter'] = self.kwargs['filter']
+        return context
 
 
 def get_ids(request):
-    return EquipmentType.objects.get(id = request.GET['equipment_type']).get_remaining_equipments
+    """
+        Get ids.
+    """
+    equipments = Equipment.get_ids(request.GET['equipment_type'])
+    return JsonResponse(list(equipments), safe=False)

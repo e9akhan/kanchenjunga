@@ -3,7 +3,7 @@
 {% block content %}
 
 <div class="d-flex justify-content-center align-items-center" style="height: 100%;">
-    <div class="container shadow bg-light">
+    <div class="container shadow bg-light rounded">
         <div class="container text-center" style="height: 10%;"><h3 class="m-0">{{equipment.label}}</h3></div>
         <hr>
         <div class="row w-100 m-2">
@@ -13,6 +13,7 @@
                 <h5 class="m-0">Brand</h5>
                 <h5 class="m-0">Price</h5>
                 <h5 class="m-0">Buy Date</h5>
+                <h5 class="m-0">Functional</h5>
             </div>
             <div class="col-3 border-right">
                 <p class="m-0">{{equipment.serial_number}}</p>
@@ -20,10 +21,11 @@
                 <p class="m-0">{{equipment.brand}}</p>
                 <p class="m-0">{{equipment.price}}</p>
                 <p class="m-0">{{equipment.buy_date}}</p>
+                <p class="m-0">{{equipment.functional}}</p>
             </div>
 
             <div class="col-5" style="height: 100%;">
-                <h5>Users</h5>
+                <h5>All Users</h5>
                 <div class="overflow-scroll">
                     <p class="m-0">Akbar Khan</p>
                     <p class="m-0">Gaurav</p>
@@ -35,6 +37,8 @@
                 </div>
             </div>
         </div>
+        <a href="{% url 'store:update-equipment' pk=equipment.pk equipment_type=equipment_type filter=filter %}" class="btn btn-outline-success m-1">Edit</a>
+        <a href="{% url 'store:delete-equipment' pk=equipment.pk equipment_type=equipment_type filter=filter %}" class="btn btn-outline-danger m-1">Delete</a>
     </div>
 </div>
 

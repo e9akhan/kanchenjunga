@@ -48,7 +48,7 @@ class EquipmentForm(forms.ModelForm):
 
     class Meta:
         model = Equipment
-        fields = ('serial_number', 'model_number', 'price', 'buy_date', 'brand')
+        fields = ('serial_number', 'model_number', 'price', 'buy_date', 'brand', 'equipment_type')
 
         widgets = {
             "serial_number": forms.TextInput(
@@ -91,10 +91,39 @@ class UpdateEquipmentForm(EquipmentForm):
     Update form for equipment.
     """
 
-    label = forms.CharField()
-    functioal = forms.BooleanField()
+    class Meta(EquipmentForm.Meta):
+        fields = ('label',) + EquipmentForm.Meta.fields + ('under_repair', 'functional')
 
-    label.widget.attrs.update({'class': 'form-control', 'readonly': 'True'})
+        widgets = {
+            'label': forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}),
+            "serial_number": forms.TextInput(
+                attrs={"class": "form-control"}
+            ),
+            "model_number": forms.TextInput(
+                attrs={'class': 'form-control'}
+            ),
+            "price": forms.NumberInput(
+                attrs={'class': 'form-control'}
+            ),
+            'buy_date': forms.DateInput(
+                attrs={'class': 'form-control', 'type': 'date'}
+            ),
+            'brand': forms.TextInput(
+                attrs={'class': 'form-control'}
+            )
+        }
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        if instance.under_repair == True or instance.functional == False:
+            equipment = Equipment.objcets.filter(pk = instance.pk)
+            last_allocation = list(equipment.allocation.all())[-1]
+            last_allocation.returned = False
+            last_allocation.save()
+        
+        if commit:
+            instance.save()
+        return instance
 
 
 class AllocationForm(forms.ModelForm):
@@ -111,7 +140,7 @@ class AllocationForm(forms.ModelForm):
         fields = ('user', 'equipment')
 
         widgets = {
-            'equipment': forms.TextInput(attrs={'class': 'form-select'})
+            'equipment': forms.Select(attrs={'class': 'form-select'})
         }
 
     user.widget.attrs.update({'class': 'form-select'})
@@ -129,4 +158,6 @@ class UpdateAllocationForm(AllocationForm):
     """
         Update Allocation Form.
     """
-    returned = forms.BooleanField()
+    
+    class Meta(AllocationForm.Meta):
+        fields = AllocationForm.Meta.fields + ('returned',)
