@@ -1,36 +1,30 @@
-{% extends 'store/base.html' %}
-
-{% block content %}
-
-{% block app_content %}{% endblock %}
-
 <div class="container mt-1">
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
             {% if not search %}
                 {% if page_obj.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{page_obj.previous_page_number}}" aria-label="Previous">
+                        <a href="?page={{page_obj.previous_page_number}}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                 {% else %}
                     <li class="page-item disabled">
-                        <a class="page-link" href="#" aria-label="Previous">
+                        <a href="" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                 {% endif %}
-                <li class="page-item page-link">{{page_obj.number}}</li>
+                <li class="page-item">{{page_obj.number}}</li>
                 {% if page_obj.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{page_obj.next_page_number}}" aria-label="Next">
+                        <a href="?page={{page_obj.next_page_number}}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
                 {% else %}
                     <li class="page-item disabled">
-                        <a class="page-link disabled" href="#" aria-label="Next">
+                        <a href="" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
@@ -38,27 +32,27 @@
             {% else %}
                 {% if page_obj.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?search={{search}}&page={{page_obj.previous_page_number}}" aria-label="Previous">
+                        <a href="?search={{search}}&page={{page_obj.previous_page_number}}" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                 {% else %}
                     <li class="page-item disabled">
-                        <a class="page-link" href="#" aria-label="Previous">
+                        <a href="" aria-label="Previous">
                             <span aria-hidden="true">&laquo;</span>
                         </a>
                     </li>
                 {% endif %}
-                <li class="page-item page-link">{{page_obj.number}}</li>
+                <li class="page-item">{{page_obj.number}}</li>
                 {% if page_obj.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?search={{search}}&page={{page_obj.next_page_number}}" aria-label="Next">
+                        <a href="?search={{search}}&page={{page_obj.next_page_number}}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
                 {% else %}
                     <li class="page-item disabled">
-                        <a class="page-link disabled" href="#" aria-label="Next">
+                        <a href="" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
                         </a>
                     </li>
@@ -67,5 +61,3 @@
         </ul>
     </nav>
 </div>
-
-{% endblock %}

@@ -3,12 +3,9 @@
 """
 
 from django.contrib import admin
-from store.models import Department, Equipment, EquipmentType
+from store.models import Equipment, EquipmentType
 
 # Register your models here.
-admin.site.register(Department)
-
-
 @admin.register(EquipmentType)
 class EquipmentTypeAdmin(admin.ModelAdmin):
     """
@@ -24,4 +21,4 @@ class EquipmentAdmin(admin.ModelAdmin):
     Equipment admin class.
     """
 
-    list_display = ["label", "equipment_type", "user", "department", "functional"]
+    list_display = ["label", "equipment_type", "functional"]

@@ -25,16 +25,10 @@
             <div class="functional-tabs">
               {% if request.user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link text-white" aria-current="page" href="{% url 'store:add-equipment' %}">Assign Item</a>
+                <a class="nav-link text-white" aria-current="page" href="{% url 'store:create-allocation' %}">Assign</a>
               </li>
                 <li class="nav-item">
                   <a class="nav-link text-white" aria-current="page" href="{% url 'store:equipment-types' %}">Equipment Types</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-white" href="{% url 'store:equipments' %}">Assigned Equipments</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link text-white" href="{% url 'store:departments' %}">Departments</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link text-white" href="{% url 'accounts:users' %}">Users</a>
@@ -43,7 +37,7 @@
             </div>
           </ul>
           <ul class="navbar-nav mb-2 mb-lg-0">
-            <li class="nav-item">
+            <li class="nav-item functional-tabs">
               {% if request.user.is_authenticated %}
                 <a href="{% url 'accounts:logout' %}" class="nav-link text-white">Logout</a>
               {% else %}
@@ -55,62 +49,51 @@
       </div>
     </nav>
 
-    <div class="d-flex justify-content-center" style="height: 93%;">
-
-      <div class="p-0 bg-purple" id="desktop-mode">
-        <h3 class="p-2 text-center text-white">Inventory Store</h3>
-
-        <div class="container-fluid mt-2 m-0">
-          <a href="{% url 'store:add-equipment' %}" class="btn btn-light m-2">Add Equipment</a>
-
-            <a href="{% url 'store:equipment-types' %}">
-              <div class="d-flex justify-content-between p-3 tab">
-                <h6>Equipment Types</h6>
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
-              </div>
+      <div class="d-flex justify-content-center align-items-center" style="height: 94%;">
+        <div id="side-bar" style="height: 100%;">
+          <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="width: 280px; height: 100%;">
+            <a href="{% url 'store:equipment-types' %}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+              <span class="fs-4">Inventory Store</span>
             </a>
-            <a href="{% url 'store:equipments' %}">
-              <div class="d-flex justify-content-between p-3 tab">
-                <h6>Assigned Equipments</h6>
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
-              </div>
-            </a>
-            <a href="{% url 'store:departments' %}">
-              <div class="d-flex justify-content-between p-3 tab">
-                <h6>Departments</h6>
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
-              </div>
-            </a>
-            <a href="{% url 'store:alerts' %}">
-              <div class="d-flex justify-content-between p-3 tab">
-                <h6>Alerts</h6>
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
-              </div>
-            </a>
-            <a href="{% url 'accounts:users' %}">
-              <div class="d-flex justify-content-between p-3 tab">
-                <h6>Users</h6>
-                <i class="fa fa-angle-right" aria-hidden="true"></i>
-              </div>
-            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+              <a href="{% url 'store:create-allocation' %}" class="btn btn-dark mb-2">Assign</a>
+              <a href="{% url 'store:add-equipment' %}" class="btn btn-dark mb-2">Add Equipment</a>
+              <li>
+                <a href="{% url 'store:equipment-types' %}" class="nav-link link-dark">
+                  Dashboard
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'accounts:users' %}" class="nav-link link-dark">
+                  Users
+                </a>
+              </li>
+              <li>
+                <a href="{% url 'store:allocations' %}" class="nav-link link-dark">
+                  Allocations
+                </a>
+              </li>
+            </ul>
+            <hr>
+            <div class="dropdown">
+              <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle" id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-user p-1" style="font-size: xx-large;"></i>
+                <strong>{{request.user|title}}</strong>
+              </a>
+              <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                <li><a class="dropdown-item" href="{% url 'accounts:update-user' request.user.pk %}">Edit Profile</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{% url 'accounts:logout' %}">Sign out</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+  
+        <div class="container h-100">
+          {% block content %}{% endblock %}
         </div>
       </div>
-
-      <div class="container h-100" id="content">
-
-        {% if messages %}
-            {% for message in messages %}
-              <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                {{message}}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-            {% endfor %}
-        {% endif %}
-
-        {% block content %}{% endblock %}
-      </div>
-
-    </div>
     <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: Bootstrap Bundle with Popper -->

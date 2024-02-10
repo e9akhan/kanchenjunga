@@ -3,6 +3,7 @@
 """
 
 import random
+from datetime import date, timedelta
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -10,34 +11,6 @@ from django.db.models import Manager
 
 
 # Create your models here.
-class Department(models.Model):
-    """
-    Department Model.
-    """
-
-    name = models.CharField(max_length=50)
-
-    objects = Manager()
-
-    @classmethod
-    def create_random_departments(cls):
-        """
-        Create random departments.
-        """
-        department_list = []
-
-        for i in range(15):
-            department_list.append(cls(name="Cohort-" + str(i)))
-
-        cls.objects.bulk_create(department_list)
-
-    def __str__(self):
-        """
-        String Representation.
-        """
-        return f'{self.name}'
-
-
 class EquipmentType(models.Model):
     """
     Equipment Type Model.
@@ -48,44 +21,15 @@ class EquipmentType(models.Model):
     objects = Manager()
 
     @property
-    def get_total_equipments(self):
+    def get_remaining_equipments(self):
         """
         Get total equipments.
         """
-        return self.equipment.count()
-
+        return len(Equipment.get_non_assigned_equipments(self))
+    
     @property
-    def get_functional_equipments(self):
-        """
-        Get functional equipments.
-        """
-        return len(
-            [
-                equipment
-                for equipment in self.equipment.all()
-                if equipment.functional is True
-            ]
-        )
-
-    @property
-    def get_assigned_equipments(self):
-        """
-        Get assigned equipments.
-        """
-        return len(
-            [
-                equipment
-                for equipment in self.equipment.all()
-                if equipment.user is not None and equipment.functional is True
-            ]
-        )
-
-    @property
-    def get_remaining_equipments(self):
-        """
-        Get remaining equipments.
-        """
-        return self.get_functional_equipments - self.get_assigned_equipments
+    def get_equipment_ids(self):
+        return Equipment.get_non_assigned_equipments(self)
 
     @classmethod
     def create_random_equipment_types(cls):
@@ -114,15 +58,15 @@ class Equipment(models.Model):
     """
 
     label = models.CharField(max_length=10)
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, default=None, null=True, blank=True
-    )
-    department = models.ForeignKey(
-        Department, on_delete=models.CASCADE, default=None, null=True, blank=True
-    )
+    serial_number = models.CharField(max_length=20)
+    model_number = models.CharField(max_length=20)
+    brand = models.CharField(max_length=30)
+    price = models.FloatField()
+    buy_date = models.DateField()
     equipment_type = models.ForeignKey(
         EquipmentType, on_delete=models.CASCADE, related_name="equipment"
     )
+    under_repair = models.BooleanField(default=False)
     functional = models.BooleanField(default=True)
 
     objects = Manager()
@@ -134,36 +78,131 @@ class Equipment(models.Model):
         """
         try:
             temp_id = list(self.equipment_type.equipment.all())[-1]
-            count = int(temp_id.label[6:]) + 1
+            count = int(temp_id.label[4:]) + 1
         except IndexError:
             count = 1
         return f"{self.equipment_type.name[:3]}-{count:0>6}"
+
+    @property
+    def get_current_user(self):
+        allocations = self.allocation.all()
+        if allocations:
+            return allocations[-1].user
+        return "No User"
+    
+    @classmethod
+    def get_all_equipments(cls, equipment_type):
+        return cls.objects.filter(equipment_type = equipment_type)
+    
+    @classmethod
+    def get_all_functional_equipments(cls, equipment_type):
+        return cls.objects.filter(equipment_type = equipment_type, functional = True, under_repair=False)
+
+    @classmethod
+    def get_under_repair_equipments(cls, equipment_type):
+        return cls.objects.filter(equipment_type = equipment_type, functional = True, under_repair=True)
+
+    @classmethod
+    def get_assigned_equipments(cls, equipment_type):
+        equipments = cls.objects.filter(equipment_type = equipment_type, functional=True, under_repair=False)
+        assigned_equipments = []
+        
+        for equipment in equipments:
+            allocations = equipment.allocation.all()
+            if not allocations:
+                continue
+
+            last_allocation = list(allocations)[-1]
+            if not last_allocation.returned:
+                assigned_equipments.append(equipment)
+
+        return assigned_equipments
+    
+    @classmethod
+    def get_non_assigned_equipments(cls, equipment_type):
+        equipments = cls.objects.filter(equipment_type = equipment_type, functional=True, under_repair=False)
+        non_assigned_equipments = []
+
+        for equipment in equipments:
+            allocations = equipment.allocation.all()
+            if not allocations:
+                non_assigned_equipments.append(equipment)
+                continue
+
+            last_allocation = list(allocations)[-1]
+            if last_allocation.returned:
+                non_assigned_equipments.append(equipment)
+
+        return non_assigned_equipments
+    
+    @classmethod
+    def get_ids(cls, equipment_type):
+        return [
+            (equipment.id, equipment.label)
+            for equipment in cls.get_non_assigned_equipments(equipment_type)
+        ]
 
     @classmethod
     def create_random_equipments(cls):
         """
         Create random equipments.
         """
-        departments = list(Department.objects.all())
         equipment_types = list(EquipmentType.objects.all())
         functionality = [True, False]
-
-        equipment_list = []
+        serial_numbers = [f'{random.randint(0, 9)}{random.randint(0, 9)}{random.randint(0, 9)}' for _ in range(1000)]
+        model_numbers = [f'Model-{number}' for number in serial_numbers]
+        buy_dates = [date.today() - timedelta(days=x) for x in range(40)]
+        brands = ['Samsung', 'Nokia', 'Microsoft', 'Apple', 'Logitech', 'Dell']
 
         for _ in range(500):
             instance = cls(
-                department=random.choice(departments),
+                buy_date = random.choice(buy_dates),
+                price=random.randint(1000, 10000),
+                serial_number=random.choice(serial_numbers),
+                model_number=random.choice(model_numbers),
                 equipment_type=random.choice(equipment_types),
                 functional=random.choice(functionality),
+                brand = random.choice(brands)
             )
             instance.label = instance.set_label
-
-            equipment_list.append(instance)
-
-        cls.objects.bulk_create(equipment_list)
+            instance.save()
 
     def __str__(self):
         """
         String Representation.
         """
-        return f'{self.label}'
+        return self.label
+
+
+class Allocation(models.Model):
+    equipment = models.ForeignKey(Equipment, on_delete=models.CASCADE, related_name='allocation')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    returned = models.BooleanField(default=False)
+
+    @classmethod
+    def get_non_returned_allocations(cls):
+        return cls.objects.filter(
+            returned = False
+        )
+    
+    @classmethod
+    def create_random_allocations(cls):
+        users = list(User.objects.all())
+        equipments = list(Equipment.objects.all())
+        returned = [True, False]
+
+        allocation_list = []
+
+        for _ in range(40):
+            allocation = cls(
+                user =random.choice(users),
+                equipment = random.choice(equipments),
+                returned = random.choice(returned)
+            )
+
+            allocation_list.append(allocation)
+
+        cls.objects.bulk_create(allocation_list)
+
+    def __str__(self):
+        return f'{self.equipment} - {self.user}'

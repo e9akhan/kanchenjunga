@@ -30,11 +30,28 @@ a:link{
 }
 
 #desktop-mode{
-    width: 30%;
+    width: 15%;
 }
 
 .bg-purple{
     background-color: #7952b3;
+}
+
+.border-purple{
+    border: 1px solid #7952b3;
+    border-collapse: collapse;
+}
+
+.color-purple{
+    color: #7952b3;
+}
+
+.border-bottom{
+    border-bottom: 1px solid black;
+}
+
+.border-right{
+    border-right: 1px solid black;
 }
 
 @media only screen and (max-width: 1000px) and (min-width: 751px){
@@ -42,10 +59,6 @@ a:link{
         font-size: 0.9rem;
         padding: 1px;
         margin: 1px;
-    }
-
-    .info-table{
-        font-size: 0.7rem;
     }
 
     .add-button{
@@ -60,12 +73,8 @@ a:link{
         display: block;
     }
 
-    #desktop-mode{
+    #side-bar{
         display: none;
-    }
-
-    #content{
-        width: 100%;
     }
 
     .buttons{
@@ -86,16 +95,12 @@ a:link{
 
 @media only screen and (max-width: 500px) and (min-width: 401px){
 
-    #functional-tabs{
+    .functional-tabs{
         display: block;
     }
 
-    #desktop-mode{
+    #side-bar{
         display: none;
-    }
-
-    #content{
-        width: 100%;
     }
 
     .buttons{
@@ -116,16 +121,12 @@ a:link{
 
 @media only screen and (max-width: 400px) and (min-width: 301px){
 
-    #functional-tabs{
+    .functional-tabs{
         display: block;
     }
 
-    #desktop-mode{
+    #side-bar{
         display: none;
-    }
-
-    #content{
-        width: 100%;
     }
 
     .buttons{
@@ -145,16 +146,12 @@ a:link{
 }
 
 @media only screen and (max-width: 300px){
-    #functional-tabs{
+    .functional-tabs{
         display: block;
     }
 
-    #desktop-mode{
+    #side-bar{
         display: none;
-    }
-
-    #content{
-        width: 100%;
     }
 
     .buttons{
