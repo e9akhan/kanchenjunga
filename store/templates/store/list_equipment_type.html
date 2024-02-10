@@ -15,9 +15,11 @@
   </div>
 </div>
 
-<div class="row row-cols-2 row-cols-sm-2 row-cols-md-3">
+<div class="overflow-auto m-0 p-0" style="height: 90%;">
+  <div class="row row-cols-2 row-cols-sm-2 row-cols-md-3">
     {% for equipment_type in equipment_types %}
-    <div class="col rounded mb-3 p-0 m-2 shadow bg-light" style="max-width: 250px;">
+    {% with variable=equipment_type.get_remaining_equipments %}
+    <div class="col rounded mb-3 p-0 m-2 shadow {% if variable < 5 %}bg-danger bg-gradient{% else %}bg-light{% endif %}" style="max-width: 250px;">
       <div class="text-center">
         <div class="position-relative">
           <div class="position-absolute end-0 p-1">
@@ -28,11 +30,13 @@
       </div>
       <hr>
       <div class="d-flex align-items-center justify-content-center m-2">
-        <h3>{{equipment_type.get_remaining_equipments}}</h5>
+        <h3>{{variable}}</h5>
       </div>
-      <a href="{% url 'store:particular-equipments' equipment_type=equipment_type.name filter='working' %}" class="btn btn-outline-secondary btn-sm m-2">List Items</a>
+      <a href="{% url 'store:particular-equipments' equipment_type=equipment_type.name filter='working' %}" class="btn {% if variable < 5 %}btn-outline-light{% else %}btn-outline-secondary{% endif %} btn-sm m-2">List Items</a>
     </div>
+    {% endwith %}
   {% endfor %}
+</div>
 </div>
 
 {% endblock %}

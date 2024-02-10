@@ -3,15 +3,6 @@
     padding: 0px;
 }
 
-.tab{
-    color: white;
-}
-
-.tab:hover{
-    background-color: white;
-    color: #7952b3;
-}
-
 a:link{
     text-decoration: none;
 }
@@ -19,10 +10,6 @@ a:link{
 .container-box{
     height: 10%;
     width: 100%;
-}
-
-.side-bar{
-    height: 92%;
 }
 
 .functional-tabs{
@@ -35,15 +22,6 @@ a:link{
 
 .bg-purple{
     background-color: #7952b3;
-}
-
-.border-purple{
-    border: 1px solid #7952b3;
-    border-collapse: collapse;
-}
-
-.color-purple{
-    color: #7952b3;
 }
 
 .border-bottom{
@@ -83,10 +61,6 @@ a:link{
         margin: 1px;
     }
 
-    .info-table{
-        font-size: 0.6rem;
-    }
-
     .add-button{
         font-size: 0.9rem;
         padding: 1px;
@@ -107,10 +81,6 @@ a:link{
         font-size: 0.7rem;
         padding: 2px;
         margin: 1px;
-    }
-
-    .info-table{
-        font-size: 0.7rem;
     }
 
     .add-button{
@@ -135,10 +105,6 @@ a:link{
         margin: 1px;
     }
 
-    .info-table{
-        font-size: 0.6rem;
-    }
-
     .add-button{
         font-size: 0.7rem;
         padding: 1px;
@@ -158,10 +124,6 @@ a:link{
         font-size: 0.5rem;
         padding: 0px;
         margin: 1px;;
-    }
-
-    .info-table{
-        font-size: 0.5rem;
     }
 
     .add-button{

@@ -9,16 +9,14 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.models import User
 from django.contrib import messages
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from accounts.forms import SignUpForm, LoginForm, UpdateUserForm
 
 # Create your views here.
 
 
-@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
-class CreateUser(PermissionRequiredMixin, CreateView):
+class CreateUser(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     """
     Create user.
     """
@@ -27,6 +25,7 @@ class CreateUser(PermissionRequiredMixin, CreateView):
     form_class = SignUpForm
     success_url = reverse_lazy("accounts:users")
     permission_required = ["is_superuser"]
+    login_url = reverse_lazy("accounts:login")
 
     def form_invalid(self, form):
         """
@@ -36,8 +35,7 @@ class CreateUser(PermissionRequiredMixin, CreateView):
         return super().form_invalid(form)
 
 
-@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
-class UpdateUser(PermissionRequiredMixin, UpdateView):
+class UpdateUser(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     """
     Update user.
     """
@@ -47,6 +45,7 @@ class UpdateUser(PermissionRequiredMixin, UpdateView):
     template_name = "accounts/user.html"
     context_object_name = "user"
     success_url = reverse_lazy("accounts:users")
+    login_url = reverse_lazy("accounts:login")
 
     def get(self, request, *args, **kwargs):
         """
@@ -54,9 +53,8 @@ class UpdateUser(PermissionRequiredMixin, UpdateView):
         """
         try:
             self.get_object()
-        except self.model.DoesNotExist:
-            messages.info(request, "User doest not exists.")
-            return redirect("accounts:login")
+        except Exception:
+            return redirect("accounts:users")
 
         return super().get(request, *args, **kwargs)
 
@@ -76,8 +74,7 @@ class UpdateUser(PermissionRequiredMixin, UpdateView):
         )
 
 
-@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
-class DeleteUser(PermissionRequiredMixin, DeleteView):
+class DeleteUser(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     """
     Delete user.
     """
@@ -86,6 +83,7 @@ class DeleteUser(PermissionRequiredMixin, DeleteView):
     template_name = "accounts/delete.html"
     success_url = reverse_lazy("accounts:users")
     context_object_name = "user"
+    login_url = reverse_lazy("accounts:login")
 
     def get(self, request, *args, **kwargs):
         """
@@ -93,8 +91,7 @@ class DeleteUser(PermissionRequiredMixin, DeleteView):
         """
         try:
             self.get_object()
-        except self.model.DoesNotExist:
-            messages.info(request, "User doest not exists.")
+        except Exception:
             return redirect("accounts:users")
 
         return super().get(request, *args, **kwargs)
@@ -116,8 +113,7 @@ class DeleteUser(PermissionRequiredMixin, DeleteView):
         return context
 
 
-@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
-class ListUser(ListView):
+class ListUser(LoginRequiredMixin, ListView):
     """
     List all users.
     """
@@ -125,6 +121,7 @@ class ListUser(ListView):
     model = User
     template_name = "accounts/list_user.html"
     paginate_by = 25
+    login_url = reverse_lazy("accounts:login")
 
 
 class UserLoginView(LoginView):
@@ -137,8 +134,7 @@ class UserLoginView(LoginView):
     next_page = reverse_lazy("store:equipment-types")
 
 
-@method_decorator(login_required(login_url="accounts:login"), name="dispatch")
-class SearchUser(ListView):
+class SearchUser(LoginRequiredMixin, ListView):
     """
     Search User.
     """
@@ -146,6 +142,7 @@ class SearchUser(ListView):
     model = User
     template_name = "accounts/list_user.html"
     paginate_by = 25
+    login_url = reverse_lazy("accounts:login")
 
     def get_queryset(self):
         """

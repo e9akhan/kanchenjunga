@@ -24,14 +24,16 @@
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <div class="functional-tabs">
               {% if request.user.is_authenticated %}
-              <li class="nav-item">
-                <a class="nav-link text-white" aria-current="page" href="{% url 'store:create-allocation' %}">Assign</a>
-              </li>
+              <a href="{% url 'store:create-allocation' %}" class="btn btn-dark mb-2">Assign</a>
+              <a href="{% url 'store:add-equipment' %}" class="btn btn-dark mb-2">Add Equipment</a>
                 <li class="nav-item">
-                  <a class="nav-link text-white" aria-current="page" href="{% url 'store:equipment-types' %}">Equipment Types</a>
+                  <a class="nav-link text-white" aria-current="page" href="{% url 'store:equipment-types' %}">Dashboard</a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link text-white" href="{% url 'accounts:users' %}">Users</a>
+                </li>
+                <li class="nav-item">
+                  <a href="{% url 'store:allocations' %}" class="nav-link text-white">Allocations</a>
                 </li>
               {% endif %}
             </div>
