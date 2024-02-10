@@ -8,9 +8,8 @@ from django.core import serializers
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DeleteView, CreateView, UpdateView, DetailView
 from django.contrib import messages
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Q
-from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from store.models import Equipment, EquipmentType, Allocation
 from store.forms import (
@@ -127,7 +126,7 @@ class CreateEquipment(LoginRequiredMixin, CreateView):
 
     model = Equipment
     form_class = AddEquipmentForm
-    template_name = "store/form.html"
+    template_name = "store/create_equipment.html"
     success_url = reverse_lazy("store:equipment-types")
     login_url = reverse_lazy('accounts:login')
 
@@ -226,7 +225,7 @@ class DetailEquipment(LoginRequiredMixin, DetailView):
         return context
 
 
-class CreateAllocation(LoginRequiredMixin, CreateView):
+class CreateAllocation(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     """
         Create Allocation.
     """
@@ -236,6 +235,7 @@ class CreateAllocation(LoginRequiredMixin, CreateView):
     template_name = 'store/create_allocation.html'
     success_url = reverse_lazy('store:create-allocation')
     login_url = reverse_lazy('accounts:login')
+    success_message = 'Allocated'
 
     def get_context_data(self, **kwargs):
         """
@@ -390,3 +390,11 @@ def get_ids(request):
     """
     equipments = Equipment.get_ids(request.GET['equipment_type'])
     return JsonResponse(list(equipments), safe=False)
+
+
+def get_label(request):
+    """
+        Get Label.
+    """
+    equipment = Equipment.objects.filter(equipment_type = request.GET['equipment_type'])[0]
+    return JsonResponse(equipment.set_label, safe=False)

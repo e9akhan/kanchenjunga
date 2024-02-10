@@ -48,9 +48,12 @@ class EquipmentForm(forms.ModelForm):
 
     class Meta:
         model = Equipment
-        fields = ('serial_number', 'model_number', 'price', 'buy_date', 'brand', 'equipment_type')
+        fields = ('label', 'serial_number', 'model_number', 'price', 'buy_date', 'brand', 'equipment_type')
 
         widgets = {
+            "label": forms.TextInput(
+                attrs={"class": "form-control", 'readonly': True}
+            ),
             "serial_number": forms.TextInput(
                 attrs={"class": "form-control"}
             ),
@@ -153,8 +156,12 @@ class CreateAllocationForm(AllocationForm):
     """
         Create Allocation Form.
     """
-    equipment_type = forms.ModelChoiceField(queryset=EquipmentType.objects.all(), empty_label='Choose Equipment')
+
+    equipment_type = forms.ModelChoiceField(queryset=EquipmentType.objects.all(), empty_label='Choose Equipment Type')
     equipment_type.widget.attrs.update({'class': 'form-select'})
+
+    class Meta(AllocationForm.Meta):
+        fields = AllocationForm.Meta.fields
 
 
 class UpdateAllocationForm(AllocationForm):

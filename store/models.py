@@ -85,10 +85,17 @@ class Equipment(models.Model):
 
     @property
     def get_current_user(self):
-        allocations = self.allocation.all()
+        allocations = list(self.allocation.all())
         if allocations:
-            return allocations[-1].user
+            return allocations[-1].user if allocations[-1].returned == False else "No User"
         return "No User"
+    
+    @property
+    def get_all_users(self):
+        return [
+            allocation.user
+            for allocation in self.allocation.all()
+        ][::-1]
     
     @classmethod
     def get_all_equipments(cls, equipment_type):
@@ -138,7 +145,7 @@ class Equipment(models.Model):
     @classmethod
     def get_ids(cls, equipment_type):
         return [
-            (equipment.id, equipment.label)
+            (equipment.pk, equipment.label)
             for equipment in cls.get_non_assigned_equipments(equipment_type)
         ]
 

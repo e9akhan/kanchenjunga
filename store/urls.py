@@ -19,7 +19,8 @@ from store.views import (
     SearchEquipment,
     SearchEquipmentType,
     SearchAllocation,
-    get_ids
+    get_ids,
+    get_label
 )
 
 app_name = "store"
@@ -80,5 +81,6 @@ urlpatterns = [
         SearchAllocation.as_view(),
         name='search-allocation'
     ),
-    path('get_ids/', get_ids, name='get_ids')
+    path('get_ids/', get_ids, name='get_ids'),
+    path('get_label/', get_label, name='get_label')
 ]
