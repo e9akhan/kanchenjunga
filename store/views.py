@@ -2,7 +2,6 @@
     Module name :- views
 """
 
-from django.shortcuts import redirect
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views.generic import (
@@ -67,17 +66,6 @@ class DeleteEquipmentType(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("store:equipment-types")
     context_object_name = "item"
     login_url = reverse_lazy("accounts:login")
-
-    def get(self, request, *args, **kwargs):
-        """
-        Overridden get method.
-        """
-        try:
-            self.get_object()
-        except Exception:
-            return redirect("store:equipment-types")
-
-        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """
@@ -161,14 +149,6 @@ class UpdateEquipment(LoginRequiredMixin, UpdateView):
     form_class = UpdateEquipmentForm
     login_url = reverse_lazy("accounts:login")
 
-    def get(self, request, *args, **kwargs):
-        try:
-            self.get_object()
-        except Exception:
-            return redirect("store:equipments")
-
-        return super().get(request, *args, **kwargs)
-
     def get_context_data(self, **kwargs):
         """
         Overridden get context data.
@@ -199,14 +179,6 @@ class DeleteEquipment(LoginRequiredMixin, DeleteView):
     model = Equipment
     template_name = "store/delete.html"
     login_url = reverse_lazy("accounts:login")
-
-    def get(self, request, *args, **kwargs):
-        try:
-            self.get_object()
-        except Exception:
-            return redirect("store:equipments")
-
-        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         """

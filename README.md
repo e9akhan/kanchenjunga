@@ -51,4 +51,15 @@ Your project is available at http://127.0.0.1:8000
 
 ------
 
-`Generation of fake data will set same label as fake data is created using bulk_create().`
+**Working on pylint errors**
+
+1. accounts
+
+- User model imported from django.contrib.auth.models (imported-auth-user)
+- Too many ancestors (8/7) (too-many-ancestors)
+
+2. store
+
+- User model imported from django.contrib.auth.models (imported-auth-user)
+- Too many ancestors (8/7) (too-many-ancestors)
+- Module name "0001_initial" doesn't conform to snake_case naming style (invalid-name)

@@ -2,7 +2,6 @@
     Module name :- views
 """
 
-from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -47,17 +46,6 @@ class UpdateUser(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("accounts:users")
     login_url = reverse_lazy("accounts:login")
 
-    def get(self, request, *args, **kwargs):
-        """
-        Get method.
-        """
-        try:
-            self.get_object()
-        except Exception:
-            return redirect("accounts:users")
-
-        return super().get(request, *args, **kwargs)
-
     def form_invalid(self, form):
         """
         Invalid form.
@@ -84,17 +72,6 @@ class DeleteUser(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("accounts:users")
     context_object_name = "user"
     login_url = reverse_lazy("accounts:login")
-
-    def get(self, request, *args, **kwargs):
-        """
-        Get method.
-        """
-        try:
-            self.get_object()
-        except Exception:
-            return redirect("accounts:users")
-
-        return super().get(request, *args, **kwargs)
 
     def has_permission(self) -> bool:
         """
