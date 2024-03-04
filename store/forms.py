@@ -3,7 +3,7 @@
 """
 
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from store.models import Equipment, EquipmentType, Allocation
 
 
@@ -129,7 +129,7 @@ class AllocationForm(forms.ModelForm):
     """
 
     user = forms.ModelChoiceField(
-        queryset=User.objects.all(), empty_label="Choose User"
+        queryset=get_user_model().objects.all(), empty_label="Choose User"
     )
 
     class Meta:

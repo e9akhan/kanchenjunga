@@ -2,42 +2,59 @@
 
 {% block content %}
 
-<div class="d-flex justify-content-center align-items-center" style="height: 100%;">
-    <div class="container shadow bg-light rounded">
-        <div class="container text-center" style="height: 10%;"><h3 class="m-0">{{equipment.label}}</h3></div>
-        <hr>
-        <div class="row w-100 m-2">
-            <div class="col-4">
-                <h5 class="m-0">Serial Number</h5>
-                <h5 class="m-0">Model Number</h5>
-                <h5 class="m-0">Brand</h5>
-                <h5 class="m-0">Price</h5>
-                <h5 class="m-0">Buy Date</h5>
-                <h5 class="m-0">Functional</h5>
-                <h5 class="m-0">Current User</h5>
-            </div>
-            <div class="col-3 border-right">
-                <p class="m-0">{{equipment.serial_number}}</p>
-                <p class="m-0">{{equipment.model_number}}</p>
-                <p class="m-0">{{equipment.brand}}</p>
-                <p class="m-0">{{equipment.price}}</p>
-                <p class="m-0">{{equipment.buy_date}}</p>
-                <p class="m-0">{{equipment.functional}}</p>
-                <p class="m-0">{{equipment.get_current_user | title}}</p>
-            </div>
+    <div class="container-fluid" style="height: 90%;">
+        <div class="container-fluid my-3"><h3 class="m-0">{{equipment.label}}</h3></div>
+        <div class="container-fluid shadow rounded py-3" style="width: 100%; height: 95%;">
+            <div class="row my-3" style="height: 90%;">
+                <div class="col-7" style="border-right: 1px solid grey;">
+                    <div class="row p-0 my-3">
+                        <div class="col-6 m-0"><strong>Serial Number</strong></div>
+                        <div class="col-6 p-0">{{equipment.serial_number}}</div>
+                    </div>
 
-            <div class="col-5" style="height: 100%;">
-                <h5>All Users</h5>
-                <div class="overflow-scroll">
-                    {% for user in equipment.get_all_users %}
-                        <p class="m-0">{{user|title}}</p>
-                    {% endfor %}
+                    <div class="row p-0 my-3">
+                        <div class="col-6 m-0"><strong>Model Number</strong></div>
+                        <div class="col-6 p-0">{{equipment.model_number}}</div>
+                    </div>
+
+                    <div class="row p-0 my-3">
+                        <div class="col-6 m-0"><strong>Brand</strong></div>
+                        <div class="col-6 p-0">{{equipment.brand}}</div>
+                    </div>
+
+                    <div class="row p-0 my-3">
+                        <div class="col-6 m-0"><strong>Price</strong></div>
+                        <div class="col-6 p-0">{{equipment.price}}</div>
+                    </div>
+
+                    <div class="row p-0 my-3">
+                        <div class="col-6 m-0"><strong>Buy Date</strong></div>
+                        <div class="col-6 p-0">{{equipment.buy_date}}</div>
+                    </div>
+
+                    <div class="row p-0 my-3">
+                        <div class="col-6 m-0"><strong>Functional</strong></div>
+                        <div class="col-6 p-0">{{equipment.functional}}</div>
+                    </div>
+
+                    <div class="row p-0">
+                        <div class="col-6 m-0"><strong>Current User</strong></div>
+                        <div class="col-6 p-0">{{equipment.get_current_user | title}}</div>
+                    </div>
+                </div>
+    
+                <div class="col-5" style="height: 100%;">
+                    <h5>All Users</h5>
+                    <div class="overflow-auto">
+                        {% for user in equipment.get_all_users %}
+                            <p class="m-0">{{user|title}}</p>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
+            <a href="{% url 'store:update-equipment' pk=equipment.pk equipment_type=equipment_type %}" class="btn btn-outline-success m-1">Edit</a>
+            <a href="{% url 'store:delete-equipment' pk=equipment.pk equipment_type=equipment_type %}" class="btn btn-outline-danger m-1">Delete</a>
         </div>
-        <a href="{% url 'store:update-equipment' pk=equipment.pk equipment_type=equipment_type %}" class="btn btn-outline-success m-1">Edit</a>
-        <a href="{% url 'store:delete-equipment' pk=equipment.pk equipment_type=equipment_type %}" class="btn btn-outline-danger m-1">Delete</a>
     </div>
-</div>
 
 {% endblock %}

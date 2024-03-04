@@ -295,6 +295,11 @@ class ListAllocation(LoginRequiredMixin, ListView):
         Overriding get_queryset().
         """
         return self.model.get_non_returned_allocations()[::-1]
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['total'] = len(self.get_queryset())
+        return context
 
 
 class SearchEquipmentType(LoginRequiredMixin, ListView):
@@ -313,6 +318,14 @@ class SearchEquipmentType(LoginRequiredMixin, ListView):
         """
         search = self.request.GET["search"]
         return self.model.objects.filter(name__icontains=search)
+    
+    def get_context_data(self, **kwargs):
+        """
+            get_context_data()
+        """
+        context = super().get_context_data(**kwargs)
+        context['total'] = len(self.get_queryset())
+        return context
 
 
 class SearchEquipment(LoginRequiredMixin, ListView):
@@ -381,6 +394,7 @@ class SearchAllocation(LoginRequiredMixin, ListView):
         Overriding get_context_data().
         """
         context = super().get_context_data(**kwargs)
+        context['total'] = len(self.get_queryset())
         context["search"] = self.request.GET["search"]
         return context
 

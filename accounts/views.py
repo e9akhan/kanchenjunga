@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
@@ -32,6 +32,15 @@ class CreateUser(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
         """
         messages.info(self.request, form.errors)
         return super().form_invalid(form)
+    
+
+    def get_context_data(self, **kwargs):
+        """
+            get_context_data()
+        """
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Add User'
+        return context
 
 
 class UpdateUser(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
@@ -39,7 +48,7 @@ class UpdateUser(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     Update user.
     """
 
-    model = User
+    model = get_user_model()
     form_class = UpdateUserForm
     template_name = "accounts/user.html"
     context_object_name = "user"
@@ -60,6 +69,14 @@ class UpdateUser(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
         return self.request.user.is_superuser or (
             self.get_object() == self.request.user
         )
+    
+    def get_context_data(self, **kwargs):
+        """
+            get_context_data()
+        """
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Update Profile'
+        return context
 
 
 class DeleteUser(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
@@ -67,7 +84,7 @@ class DeleteUser(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     Delete user.
     """
 
-    model = User
+    model = get_user_model()
     template_name = "accounts/delete.html"
     success_url = reverse_lazy("accounts:users")
     context_object_name = "user"
@@ -95,10 +112,19 @@ class ListUser(LoginRequiredMixin, ListView):
     List all users.
     """
 
-    model = User
+    model = get_user_model()
     template_name = "accounts/list_user.html"
     paginate_by = 25
     login_url = reverse_lazy("accounts:login")
+
+
+    def get_context_data(self, **kwargs):
+        """
+            get_context_data()
+        """
+        context = super().get_context_data(**kwargs)
+        context['total'] = len(self.get_queryset())
+        return context
 
 
 class UserLoginView(LoginView):
@@ -116,7 +142,7 @@ class SearchUser(LoginRequiredMixin, ListView):
     Search User.
     """
 
-    model = User
+    model = get_user_model()
     template_name = "accounts/list_user.html"
     paginate_by = 25
     login_url = reverse_lazy("accounts:login")
@@ -131,3 +157,11 @@ class SearchUser(LoginRequiredMixin, ListView):
             | Q(first_name__icontains=search)
             | Q(last_name__icontains=search)
         )
+    
+    def get_context_data(self, **kwargs):
+        """
+            get_context_data()
+        """
+        context = super().get_context_data(**kwargs)
+        context['total'] = len(self.get_queryset())
+        return context

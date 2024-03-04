@@ -2,7 +2,7 @@
     Module name :- forms
 """
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django import forms
 
@@ -43,7 +43,7 @@ class SignUpForm(UserCreationForm):
         Meta class
         """
 
-        model = User
+        model = get_user_model()
         fields = ("username", "email", "first_name", "last_name")
 
     admin = forms.BooleanField(required=False)
@@ -73,7 +73,7 @@ class UpdateUserForm(forms.ModelForm):
         Meta class for Update User Form.
         """
 
-        model = User
+        model = get_user_model()
         fields = ("username", "email", "first_name", "last_name")
 
     def __init__(self, *args, **kwargs):

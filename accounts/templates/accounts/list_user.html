@@ -1,19 +1,11 @@
 {% extends 'store/list.html' %}
 
 {% block search %}
-<div class="row container-box p-2">
-    <div class="col-9">
-      <form action="{% url 'accounts:search-user' %}">
-        <input type="text" class="form-control" placeholder="Search" name="search">
-      </form>
-    </div>
-  
-    <div class="col-3 position-relative">
-      <div class="position-absolute end-0">
-        <a href="{% url 'accounts:add-user' %}" class="btn btn-success add-button">Add New</a>
-      </div>
-    </div>
-  </div>
+<div class="container-fluid mt-2 mb-2 p-0">
+  <form action="{% url 'accounts:search-user' %}">
+    <input type="text" class="form-control" placeholder="Search" name="search">
+  </form>
+</div>
 {% endblock %}
 
 {% block usefilter %}
@@ -21,17 +13,20 @@
 {% endblock %}
 
 {% block items %}
-{% for object in object_list %}
-<div class="d-flex justify-content-between align-items-center w-100 p-2 border-bottom">
-    <strong style="width: 10%;">{{object.get_full_name}}</strong>
-    <span>{% if object.is_superuser %}Admin{% else %}Staff{% endif %}</span>
-    <div>
-        {% if request.user.is_superuser or request.user == object %}
-          <a href="{% url 'accounts:update-user' object.pk %}" class="btn btn-outline-success btn-sm">Edit</a>
-          <a href="{% url 'accounts:delete-user' object.pk %}" class="btn btn-outline-danger btn-sm">Delete</a>
-        {% else %}
-        {% endif %}
-    </div>
-</div>
-{% endfor %}
+<table class="table table-striped table-hover info-table">
+    <tbody>
+    {% for object in object_list %}
+        <tr>
+            <th>{{object.get_full_name}}</th>
+            <td>{% if object.is_superuser %}Admin{% else %}Staff{% endif %}</td>
+            <td class="text-end">
+              {% if request.user.is_superuser or request.user == object %}
+                <a href="{% url 'accounts:update-user' object.pk %}" class="m-1"><div class="btn btn-outline-success btn-sm desktop-mode edit-button">Edit</div><i class="fa fa-pencil-square-o text-success mobile-mode" aria-hidden="true"></i></a>
+                <a href="{% url 'accounts:delete-user' object.pk %}" class="m-1"><div class="btn btn-outline-danger btn-sm desktop-mode">Delete</div><i class="fa fa-trash-o text-danger mobile-mode" aria-hidden="true"></i></a>
+              {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

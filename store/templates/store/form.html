@@ -2,30 +2,41 @@
 
 {% block content %}
 
-<div class="d-flex align-items-center" style="height: 96%;">
-    <div class="container">
-        {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                {{message}}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              </div>
-            {% endfor %}
-        {% endif %}
-        <h2 class="text-center">{{title}}</h2>
-
-        <form action="" method="post">
-            {% csrf_token %}
+<div class="container-fluid">
+    <span class="d-block my-3" style="font-size: 1.5rem; font-family: 'Courier New', Courier, monospace;">{{title}}</span>
+    <form action="" method="post">
+        {% csrf_token %}
 
             {% block form %}
 
             {{form.as_p}}
-            <button type="submit" class="btn btn-outline-success">Submit</button>
+            <button type="submit" class="btn btn-outline-success" id="toast-button">Submit</button>
             
             {% endblock %}
-        </form>
+    </form>
+</div>
+
+
+<div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <img src="..." class="rounded me-2" alt="...">
+      <strong class="me-auto">Message</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+        {% if messages %}
+            {% for message in messages %}
+                {{message}}
+            {% endfor %}
+        {% endif %}
     </div>
 </div>
+
+<script>
+    document.getElementById("toastbtn").onclick = function() {
+      toast.show()
+    }
+</script>
 
 {% block jquery %}{% endblock %}
 {% endblock %}

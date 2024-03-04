@@ -6,7 +6,7 @@ import random
 from datetime import date, timedelta
 
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db.models import Manager
 
 
@@ -32,7 +32,7 @@ class EquipmentType(models.Model):
         """
         Create random equipment types.
         """
-        equipment_types = ["Laptop", "Monitor", "Keyboard", "Mouse", "Speaker", "CPU"]
+        equipment_types = ["Laptop", "Monitor", "Keyboard", "Mouse", "Speaker", "CPU", "Headphones", "Support Stand", "Adapters", "Mousepad", "Power Bank", "Memory"]
 
         equipment_type_list = []
 
@@ -180,9 +180,9 @@ class Equipment(models.Model):
         ]
         model_numbers = [f"Model-{number}" for number in serial_numbers]
         buy_dates = [date.today() - timedelta(days=x) for x in range(40)]
-        brands = ["Samsung", "Nokia", "Microsoft", "Apple", "Logitech", "Dell"]
+        brands = ["Samsung", "Nokia", "Microsoft", "Apple", "Logitech", "Dell", "Asus", "Xiaomi", "Nothing", "HP"]
 
-        for _ in range(500):
+        for _ in range(10000):
             instance = cls(
                 buy_date=random.choice(buy_dates),
                 price=random.randint(1000, 10000),
@@ -210,7 +210,7 @@ class Allocation(models.Model):
     equipment = models.ForeignKey(
         Equipment, on_delete=models.CASCADE, related_name="allocation"
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     returned = models.BooleanField(default=False)
 
     @classmethod
@@ -225,13 +225,13 @@ class Allocation(models.Model):
         """
         Create fake allocation.
         """
-        users = list(User.objects.all())
+        users = list(get_user_model().objects.all())
         equipments = list(Equipment.objects.all())
         returned = [True, False]
 
         allocation_list = []
 
-        for _ in range(40):
+        for _ in range(10000):
             allocation = cls(
                 user=random.choice(users),
                 equipment=random.choice(equipments),

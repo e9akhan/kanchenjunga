@@ -15,7 +15,7 @@
                         </a>
                     </li>
                 {% endif %}
-                <li class="page-item">{{page_obj.number}}</li>
+                <li class="page-item">{{page_obj.number}} / {{page_obj.paginator.num_pages}}</li>
                 {% if page_obj.has_next %}
                     <li class="page-item">
                         <a href="?page={{page_obj.next_page_number}}" aria-label="Next">
@@ -43,7 +43,7 @@
                         </a>
                     </li>
                 {% endif %}
-                <li class="page-item">{{page_obj.number}}</li>
+                <li class="page-item">{{page_obj.number}} / {{page_obj.paginator.num_pages}}</li>
                 {% if page_obj.has_next %}
                     <li class="page-item">
                         <a href="?search={{search}}&page={{page_obj.next_page_number}}" aria-label="Next">

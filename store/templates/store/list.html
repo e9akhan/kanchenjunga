@@ -4,7 +4,7 @@
 
 {% block search %}{% endblock %}
 
-<div class="shadow-lg container bg-light" style="height: 85%;">
+<div class="shadow-lg container-fluid bg-light my-3" style="height: 85%;">
     <div class="d-flex w-100 m-0 text-center justify-content-between align-items-center" style="height: 7%;">
         <div></div>
         <h5>{{total}} Records</h5>
@@ -19,7 +19,7 @@
     </div>
     <hr class="m-0">
 
-    <div class="container m-0 w-100 p-1 overflow-auto" style="height: 86%;">
+    <div class="container-fluid m-0 w-100 p-1 overflow-auto" style="height: 86%;">
         {% block items %}{% endblock %}
     </div>
 
