@@ -32,14 +32,13 @@ class CreateUser(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
         """
         messages.info(self.request, form.errors)
         return super().form_invalid(form)
-    
 
     def get_context_data(self, **kwargs):
         """
-            get_context_data()
+        get_context_data()
         """
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Add User'
+        context["title"] = "Add User"
         return context
 
 
@@ -69,13 +68,13 @@ class UpdateUser(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
         return self.request.user.is_superuser or (
             self.get_object() == self.request.user
         )
-    
+
     def get_context_data(self, **kwargs):
         """
-            get_context_data()
+        get_context_data()
         """
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Update Profile'
+        context["title"] = "Update Profile"
         return context
 
 
@@ -117,13 +116,12 @@ class ListUser(LoginRequiredMixin, ListView):
     paginate_by = 25
     login_url = reverse_lazy("accounts:login")
 
-
     def get_context_data(self, **kwargs):
         """
-            get_context_data()
+        get_context_data()
         """
         context = super().get_context_data(**kwargs)
-        context['total'] = len(self.get_queryset())
+        context["total"] = len(self.get_queryset())
         return context
 
 
@@ -157,11 +155,11 @@ class SearchUser(LoginRequiredMixin, ListView):
             | Q(first_name__icontains=search)
             | Q(last_name__icontains=search)
         )
-    
+
     def get_context_data(self, **kwargs):
         """
-            get_context_data()
+        get_context_data()
         """
         context = super().get_context_data(**kwargs)
-        context['total'] = len(self.get_queryset())
+        context["total"] = len(self.get_queryset())
         return context

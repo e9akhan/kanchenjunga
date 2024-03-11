@@ -2,11 +2,6 @@
     display: none;
 }
 
-.edit-button{
-    padding-left: 4%;
-    padding-right: 4%;
-}
-
 @media screen and (max-width: 991px) and (min-width: 601px){
     .desktop-mode{
         display: none;

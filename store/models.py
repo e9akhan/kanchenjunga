@@ -32,7 +32,20 @@ class EquipmentType(models.Model):
         """
         Create random equipment types.
         """
-        equipment_types = ["Laptop", "Monitor", "Keyboard", "Mouse", "Speaker", "CPU", "Headphones", "Support Stand", "Adapters", "Mousepad", "Power Bank", "Memory"]
+        equipment_types = [
+            "Laptop",
+            "Monitor",
+            "Keyboard",
+            "Mouse",
+            "Speaker",
+            "CPU",
+            "Headphones",
+            "Support Stand",
+            "Adapters",
+            "Mousepad",
+            "Power Bank",
+            "Memory",
+        ]
 
         equipment_type_list = []
 
@@ -180,7 +193,18 @@ class Equipment(models.Model):
         ]
         model_numbers = [f"Model-{number}" for number in serial_numbers]
         buy_dates = [date.today() - timedelta(days=x) for x in range(40)]
-        brands = ["Samsung", "Nokia", "Microsoft", "Apple", "Logitech", "Dell", "Asus", "Xiaomi", "Nothing", "HP"]
+        brands = [
+            "Samsung",
+            "Nokia",
+            "Microsoft",
+            "Apple",
+            "Logitech",
+            "Dell",
+            "Asus",
+            "Xiaomi",
+            "Nothing",
+            "HP",
+        ]
 
         for _ in range(10000):
             instance = cls(

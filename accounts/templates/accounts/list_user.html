@@ -21,8 +21,8 @@
             <td>{% if object.is_superuser %}Admin{% else %}Staff{% endif %}</td>
             <td class="text-end">
               {% if request.user.is_superuser or request.user == object %}
-                <a href="{% url 'accounts:update-user' object.pk %}" class="m-1"><div class="btn btn-outline-success btn-sm desktop-mode edit-button">Edit</div><i class="fa fa-pencil-square-o text-success mobile-mode" aria-hidden="true"></i></a>
-                <a href="{% url 'accounts:delete-user' object.pk %}" class="m-1"><div class="btn btn-outline-danger btn-sm desktop-mode">Delete</div><i class="fa fa-trash-o text-danger mobile-mode" aria-hidden="true"></i></a>
+                <a href="{% url 'accounts:update-user' object.pk %}" class="m-1"><i class="fa fa-pencil-square-o text-success" aria-hidden="true"></i></a>
+                <a href="{% url 'accounts:delete-user' object.pk %}" class="m-1"><i class="fa fa-trash-o text-danger" aria-hidden="true"></i></a>
               {% endif %}
             </td>
         </tr>

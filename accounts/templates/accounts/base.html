@@ -22,7 +22,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             {% if request.user.is_authenticated %}
-            <div class="container mobile-mode d-none">
+            <div class="container mobile-mode">
               <li class="mb-1">
                 <a href="{% url 'store:equipment-types' %}" class="btn btn-toggle align-items-center rounded">
                   Dashboard

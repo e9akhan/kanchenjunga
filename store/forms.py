@@ -91,19 +91,6 @@ class UpdateEquipmentForm(EquipmentForm):
 
         fields = ("label",) + EquipmentForm.Meta.fields + ("under_repair", "functional")
 
-        widgets = {
-            "label": forms.TextInput(
-                attrs={"class": "form-control", "readonly": "True"}
-            ),
-            "serial_number": forms.TextInput(attrs={"class": "form-control"}),
-            "model_number": forms.TextInput(attrs={"class": "form-control"}),
-            "price": forms.NumberInput(attrs={"class": "form-control"}),
-            "buy_date": forms.DateInput(
-                attrs={"class": "form-control", "type": "date"}
-            ),
-            "brand": forms.TextInput(attrs={"class": "form-control"}),
-        }
-
     def save(self, commit=True):
         """
         Save Method.
