@@ -52,8 +52,8 @@
                     </div>
                 </div>
             </div>
-            <a href="{% url 'store:update-equipment' pk=equipment.pk equipment_type=equipment_type %}" class="btn btn-outline-success m-1">Edit</a>
-            <a href="{% url 'store:delete-equipment' pk=equipment.pk equipment_type=equipment_type %}" class="btn btn-outline-danger m-1">Delete</a>
+            <a href="{% url 'store:update-equipment' slug=equipment.slug equipment_type=equipment_type %}" class="btn btn-outline-success m-1">Edit</a>
+            <a href="{% url 'store:delete-equipment' slug=equipment.slug equipment_type=equipment_type %}" class="btn btn-outline-danger m-1">Delete</a>
         </div>
     </div>
 

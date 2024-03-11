@@ -17,11 +17,11 @@ class EquipmentTypeSerializer(serializers.ModelSerializer):
         """
 
         model = EquipmentType
-        fields = ["id", "name", "get_remaining_equipments"]
+        fields = ["name", "get_remaining_equipments"]
 
         extra_kwargs = {
-            "id": {"read_only": True},
             "get_remaining_equipments": {"read_only": True},
+            'slug': {'write_only': True}
         }
 
 
@@ -36,8 +36,10 @@ class EquipmentSerializer(serializers.ModelSerializer):
         """
 
         model = Equipment
-        fields = "__all__"
-        extra_kwargs = {"id": {"read_only": True}}
+        exclude = ('id',)
+        extra_kwargs = {
+            'slug': {'write_only': True}
+        }
 
 
 class AllocationSerializer(serializers.ModelSerializer):
@@ -53,8 +55,11 @@ class AllocationSerializer(serializers.ModelSerializer):
         """
 
         model = Allocation
-        fields = "__all__"
-        extra_kwargs = {"id": {"read_only": True}, "equipment": {"write_only": True}}
+        exclude = ('id',)
+        extra_kwargs = {"equipment": {"write_only": True}}
 
     def get_equipment_desc(self, obj):
+        """
+            get_equipment_desc method.
+        """
         return EquipmentSerializer(obj.equipment).data

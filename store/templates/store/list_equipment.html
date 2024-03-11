@@ -22,7 +22,7 @@
     {% for object in object_list %}
         <tr>
             <th>
-                <a href="{% url 'store:detail-equipment' pk=object.pk equipment_type=equipment_type %}" class="link-dark p-0">
+                <a href="{% url 'store:detail-equipment' slug=object.slug equipment_type=equipment_type %}" class="link-dark p-0">
                     {{object.label}}
                 </a>
             </th>

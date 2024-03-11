@@ -7,7 +7,7 @@ from datetime import date, timedelta
 
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.db.models import Manager
+from django.utils.text import slugify
 
 
 # Create your models here.
@@ -16,9 +16,8 @@ class EquipmentType(models.Model):
     Equipment Type Model.
     """
 
-    name = models.CharField(max_length=50)
-
-    objects = Manager()
+    name = models.CharField(max_length=50, unique=True)
+    slug = models.SlugField(blank=True, unique=True)
 
     @property
     def get_remaining_equipments(self):
@@ -42,7 +41,6 @@ class EquipmentType(models.Model):
             "Headphones",
             "Support Stand",
             "Adapters",
-            "Mousepad",
             "Power Bank",
             "Memory",
         ]
@@ -50,9 +48,18 @@ class EquipmentType(models.Model):
         equipment_type_list = []
 
         for equipment_type in equipment_types:
-            equipment_type_list.append(cls(name=equipment_type))
+            instance = cls(name=equipment_type)
+            instance.slug = slugify(instance.name)
+            equipment_type_list.append(instance)
 
         cls.objects.bulk_create(equipment_type_list)
+
+    def save(self, *args, **kwargs):
+        """
+            save method
+        """
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         """
@@ -77,8 +84,7 @@ class Equipment(models.Model):
     )
     under_repair = models.BooleanField(default=False)
     functional = models.BooleanField(default=True)
-
-    objects = Manager()
+    slug = models.SlugField(blank=True, unique=True)
 
     @property
     def set_label(self):
@@ -217,7 +223,15 @@ class Equipment(models.Model):
                 brand=random.choice(brands),
             )
             instance.label = instance.set_label
+            instance.slug = slugify(instance.label)
             instance.save()
+
+    def save(self, *args, **kwargs):
+        """
+            save method.
+        """
+        self.slug = slugify(self.label)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         """

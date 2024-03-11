@@ -31,23 +31,23 @@ urlpatterns = [
         "add-equipment-type/", CreateEquipmentType.as_view(), name="add-equipment-type"
     ),
     path(
-        "delete-equipment-type/<int:pk>/",
+        "delete-equipment-type/<slug:slug>/",
         DeleteEquipmentType.as_view(),
         name="delete-equipment-type",
     ),
     path("add-equipment/", CreateEquipment.as_view(), name="add-equipment"),
     path(
-        "update-equipment/<str:equipment_type>/<int:pk>/",
+        "update-equipment/<str:equipment_type>/<slug:slug>/",
         UpdateEquipment.as_view(),
         name="update-equipment",
     ),
     path(
-        "delete-equipment/<str:equipment_type>/<int:pk>/",
+        "delete-equipment/<str:equipment_type>/<slug:slug>/",
         DeleteEquipment.as_view(),
         name="delete-equipment",
     ),
     path(
-        "detail-equipment/<str:equipment_type>/<int:pk>/",
+        "detail-equipment/<str:equipment_type>/<slug:slug>/",
         DetailEquipment.as_view(),
         name="detail-equipment",
     ),

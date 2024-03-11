@@ -27,18 +27,10 @@ class EquipmentTypeDetail(RetrieveUpdateDestroyAPIView):
 
     queryset = EquipmentType.objects.all()
     serializer_class = EquipmentTypeSerializer
+    lookup_field = 'slug'
 
 
 class EquipmentList(ListCreateAPIView):
-    """
-    Equipment List.
-    """
-
-    queryset = Equipment.objects.filter(functional=True)
-    serializer_class = EquipmentSerializer
-
-
-class ParticularEquipmentList(ListCreateAPIView):
     """
     Equipment List.
     """
@@ -47,10 +39,14 @@ class ParticularEquipmentList(ListCreateAPIView):
 
     def get_queryset(self):
         """
-        get_queryset method.
+            get_queryset.
         """
-        equipment_type = EquipmentType.objects.get(name=self.kwargs["equipment_type"])
-        return Equipment.objects.filter(functional=True, equipment_type=equipment_type)
+        query = Equipment.objects.filter(functional=True)
+        search = self.request.GET.get('equipment_type', None)
+
+        if search:
+            return query.filter(equipment_type=EquipmentType.objects.get(name=search))
+        return query
 
 
 class EquipmentDetail(RetrieveUpdateDestroyAPIView):
@@ -60,6 +56,7 @@ class EquipmentDetail(RetrieveUpdateDestroyAPIView):
 
     queryset = Equipment.objects.all()
     serializer_class = EquipmentSerializer
+    lookup_field = 'slug'
 
 
 class AllocationList(ListCreateAPIView):
