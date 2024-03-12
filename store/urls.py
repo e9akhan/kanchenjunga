@@ -58,12 +58,12 @@ urlpatterns = [
     ),
     path("create-allocation/", CreateAllocation.as_view(), name="create-allocation"),
     path(
-        "allocations/update-allocation/<int:pk>",
+        "allocations/update-allocation/<slug:slug>/",
         UpdateAllocation.as_view(),
         name="update-allocation",
     ),
     path(
-        "allocations/delete-allocation/<int:pk>",
+        "allocations/delete-allocation/<slug:slug>/",
         DeleteAllocation.as_view(),
         name="delete-allocation",
     ),

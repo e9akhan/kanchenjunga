@@ -20,8 +20,8 @@
             <th>{{object.equipment}}</th>
             <td>{{ object.user|title }}</td>
             <td class="text-end">
-                <a href="{% url 'store:update-allocation' pk=object.pk %}" class="m-1"><i class="fa fa-pencil-square-o text-success" aria-hidden="true"></i></a>
-                <a href="{% url 'store:delete-allocation' pk=object.pk %}" class="m-1"><i class="fa fa-trash-o text-danger" aria-hidden="true"></i></a>
+                <a href="{% url 'store:update-allocation' slug=object.slug %}" class="m-1"><i class="fa fa-pencil-square-o text-success" aria-hidden="true"></i></a>
+                <a href="{% url 'store:delete-allocation' slug=object.slug %}" class="m-1"><i class="fa fa-trash-o text-danger" aria-hidden="true"></i></a>
             </td>
         </tr>
     {% endfor %}

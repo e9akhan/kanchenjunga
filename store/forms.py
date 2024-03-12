@@ -127,7 +127,9 @@ class AllocationForm(forms.ModelForm):
         model = Allocation
         fields = ("user", "equipment")
 
-        widgets = {"equipment": forms.Select(attrs={"class": "form-select"})}
+        widgets = {
+            "equipment": forms.Select(attrs={"class": "form-select"}),
+        }
 
     user.widget.attrs.update({"class": "form-select"})
 

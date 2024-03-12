@@ -25,7 +25,9 @@ urlpatterns = [
     path("equipments/", EquipmentList.as_view(), name="equipment-list"),
     path("equipment/<slug:slug>/", EquipmentDetail.as_view(), name="equipment-detail"),
     path("allocations/", AllocationList.as_view(), name="allocation-list"),
-    path("allocation/<int:pk>/", AllocationDetail.as_view(), name="allocation-detail"),
+    path(
+        "allocation/<slug:slug>/", AllocationDetail.as_view(), name="allocation-detail"
+    ),
 ]
 
 

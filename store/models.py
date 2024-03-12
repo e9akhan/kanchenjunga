@@ -3,7 +3,7 @@
 """
 
 import random
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -56,7 +56,7 @@ class EquipmentType(models.Model):
 
     def save(self, *args, **kwargs):
         """
-            save method
+        save method
         """
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
@@ -228,7 +228,7 @@ class Equipment(models.Model):
 
     def save(self, *args, **kwargs):
         """
-            save method.
+        save method.
         """
         if not self.label:
             self.label = self.set_label
@@ -251,6 +251,9 @@ class Allocation(models.Model):
         Equipment, on_delete=models.CASCADE, related_name="allocation"
     )
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    allocated_date = models.DateField(auto_now_add=True)
+    release_date = models.DateField(blank=True, null=True)
+    slug = models.SlugField(unique=True)
     returned = models.BooleanField(default=False)
 
     @classmethod
@@ -277,10 +280,24 @@ class Allocation(models.Model):
                 equipment=random.choice(equipments),
                 returned=random.choice(returned),
             )
+            allocation.slug = slugify(
+                f"{allocation.user}-{allocation.equipment}-{datetime.now()}"
+            )
 
             allocation_list.append(allocation)
 
         cls.objects.bulk_create(allocation_list)
+
+    def save(self, *args, **kwargs):
+        """
+        save method.
+        """
+        if self.returned:
+            self.release_date = date.today()
+
+        self.slug = slugify(f"{self.user}-{self.equipment}-{datetime.now()}")
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         """
