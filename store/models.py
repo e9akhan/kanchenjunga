@@ -230,6 +230,8 @@ class Equipment(models.Model):
         """
             save method.
         """
+        if not self.label:
+            self.label = self.set_label
         self.slug = slugify(self.label)
         super().save(*args, **kwargs)
 

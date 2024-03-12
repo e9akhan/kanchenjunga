@@ -36,9 +36,9 @@ class EquipmentSerializer(serializers.ModelSerializer):
         """
 
         model = Equipment
-        exclude = ('id',)
+        exclude = ('id', 'slug')
         extra_kwargs = {
-            'slug': {'write_only': True}
+            'label': {'read_only': True}
         }
 
 

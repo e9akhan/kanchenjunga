@@ -81,5 +81,5 @@ urlpatterns = [
     path("search-allocation/", SearchAllocation.as_view(), name="search-allocation"),
     path("get_ids/", get_ids, name="get_ids"),
     path("get_label/", get_label, name="get_label"),
-    path("api/store/", include("store.api.urls")),
+    path("api/v1/store/", include("store.api.urls")),
 ]

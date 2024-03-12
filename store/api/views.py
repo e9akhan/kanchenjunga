@@ -45,7 +45,7 @@ class EquipmentList(ListCreateAPIView):
         search = self.request.GET.get('equipment_type', None)
 
         if search:
-            return query.filter(equipment_type=EquipmentType.objects.get(name=search))
+            return query.filter(equipment_type__in=EquipmentType.objects.filter(name__icontains=search))
         return query
 
 
